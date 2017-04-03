@@ -5,7 +5,6 @@ import ContentTypeForm from "./ContentTypeForm";
 import LessonForm from "./LessonForm";
 import TVShowForm from "./TVShowForm";
 
-import "../semantic/dist/semantic.rtl.min.css";
 
 class CIT extends Component {
     static propTypes = {
@@ -81,9 +80,9 @@ class CIT extends Component {
             el = <ContentTypeForm onSelect={(x) => this.onCTSelected(x)}/>;
         }
 
-        return <Container text style={{direction: 'rtl'}}>
+        return <div style={{direction: 'rtl'}}>
             {el}
-        </Container>;
+        </div>;
     }
 }
 
