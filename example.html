@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MDB - Content Identification Tool</title>
+
+    <!-- CSS dependencies -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- MDB CIT -->
+    <link href="http://app.mdb.bbdomain.org/_tools/cit/static/css/main.db65b403.css" rel="stylesheet">
+</head>
+<body>
+<div id="root">
+    <h1>Using CIT Example</h1>
+    <button onclick="go()" class="btn btn-large btn-success">Go CIT</button>
+</div>
+
+<!-- JS dependencies -->
+<script
+        src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+<!-- MDB CIT -->
+<script type="text/javascript" src="http://app.mdb.bbdomain.org/_tools/cit/static/js/main-wrapper.3486a7f4.js"></script>
+
+<!-- Your code -->
+<script type="text/javascript">
+    function go() {
+        var metadata = {
+            content_type: "LESSON_PART",
+            language: "MLT",
+            lecturer: "rav",
+            has_translation: true,
+            part: 1
+        };
+
+        var dialog = bootbox.dialog({
+            message: '<div id="cit-element"><p class="text-center">Loading MDB Content Identification Tool...</p></div>',
+            onEscape: true,
+            closeButton: true,
+        });
+
+        dialog.init(function () {
+            setTimeout(function () {
+                showCIT(metadata, document.getElementById("cit-element"), callback);
+            }, 100);
+        });
+    }
+
+    function callback(data) {
+        console.log("CIT gave me: ", data);
+    }
+</script>
+
+</body>
+</html>
