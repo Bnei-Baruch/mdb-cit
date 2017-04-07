@@ -37,9 +37,9 @@ class LessonForm extends Component {
         state.auto_name = this.suggestName({});
     }
 
-    onSubmit() {
+    onSubmit(e) {
         // TODO: validations should go here
-        this.props.onSubmit(this.state);
+        this.props.onSubmit(e, this.state);
     }
 
     onLanguageChange(language) {
@@ -281,8 +281,8 @@ class LessonForm extends Component {
                 <Table.Row>
                     <Table.HeaderCell />
                     <Table.HeaderCell textAlign="right">
-                        <Button onClick={() => this.props.onCancel()}>בטל</Button>
-                        <Button primary onClick={() => this.onSubmit()}>שמור</Button>
+                        <Button onClick={(e) => this.props.onCancel(e)}>בטל</Button>
+                        <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Footer>

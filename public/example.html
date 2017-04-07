@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MDB - Content Identification Tool</title>
+
+    <!-- CSS dependencies -->
+    <link href="http://app.mdb.bbdomain.org/_tools/cit/mdb-cit.css" rel="stylesheet">
+</head>
+<body>
+<div id="root">
+    <h1>Using CIT Example</h1>
+    <button onclick="showModal()">CIT Modal</button>
+    <button onclick="showInline()">CIT Inline</button>
+    <div id="cit-elements"></div>
+</div>
+
+<!-- JS dependencies -->
+<script type="text/javascript" src="http://app.mdb.bbdomain.org/_tools/cit/mdb-cit.js"></script>
+
+<!-- Your code -->
+<script type="text/javascript">
+
+    function showModal() {
+        showCIT(true);
+    }
+    function showInline() {
+        showCIT(false);
+    }
+
+    function showCIT(isModal) {
+        var newDiv = document.createElement("div");
+        document.getElementById("cit-elements").appendChild(newDiv);
+
+        MdbCIT({
+            modal: isModal,
+            element: newDiv,
+            onComplete: function (data) {
+                console.log("CIT gave me: ", data);
+            },
+            onCancel: function () {
+                console.log("CIT: user cancelled");
+            },
+            metadata: {
+                content_type: "LESSON_PART",
+                language: "MLT",
+                lecturer: "rav",
+                has_translation: true,
+                part: 1
+            },
+        });
+    }
+</script>
+
+</body>
+</html>

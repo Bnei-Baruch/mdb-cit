@@ -1,29 +1,44 @@
 import React, {Component} from "react";
-import CIT from "./CIT";
+import ReactDOM from "react-dom";
+import ModalWrapper from "./ModalWrapper";
 import "./App.css";
 import logo from "./KL_Tree_64.png";
 
 class App extends Component {
 
+    onComplete(data) {
+        console.log(data);
+        this.onCancel();
+    }
+
+    onCancel() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("root"));
+    }
+
     render() {
         // const metadata = {};
         const metadata = {
             content_type: "LESSON_PART",
-            language: "MLT",
+            // content_type: "VIDEO_PROGRAM_CHAPTER",
+            language: "HEB",
             lecturer: "rav",
             has_translation: true,
-            part: 1,
+            collection_uid: "ukFliiGb",
+            episode: 827,
         };
 
+
         return (
-            <div className="app">
+            <div id="app" className="app" style={{width: "800px", margin: "0 auto"}}>
                 <div className="app-header">
                     <img src={logo} alt="logo"/>
                     <h2>MDB Content Identification Tool</h2>
                 </div>
                 <br/>
                 <div className="app-content">
-                    <CIT metadata={metadata}/>
+                    <ModalWrapper metadata={metadata}
+                                  onComplete={(x) => this.onComplete(x)}
+                                  onCancel={(e) => this.onCancel()}/>
                 </div>
             </div>
         );

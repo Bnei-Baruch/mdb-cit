@@ -1,3 +1,5 @@
+import {extractI18n} from "./utils";
+
 const API_BACKEND = process.env.NODE_ENV !== 'production' ?
     process.env.REACT_APP_MDB_URL :
     'http://app.mdb.bbdomain.org/';
@@ -13,3 +15,13 @@ const Fetcher = (path, cb) => fetch(`${API_BACKEND}${path}`)
 
 export const fetchSources = (cb) => Fetcher('sources/hierarchy', cb);
 export const fetchTags = (cb) => Fetcher('tags/hierarchy', cb);
+export const fetchTVShows = (cb) => Fetcher('rest/collections/?content_type=VIDEO_PROGRAM&page_size=1000', data => {
+    data.data.forEach(x => {
+        let langOrder = ['he', 'en', 'ru'];
+        if (!!x.properties.default_language) {
+            langOrder.unshift(x.properties.default_language);
+        }
+        x['name'] = extractI18n(x['i18n'], langOrder, ['name'])[0];
+    });
+    cb(data.data);
+});

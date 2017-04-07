@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {Container} from "semantic-ui-react";
-import {fetchSources, fetchTags} from "./Store";
+import {fetchSources, fetchTags, fetchTVShows} from "./Store";
 import ContentTypeForm from "./ContentTypeForm";
 import LessonForm from "./LessonForm";
 import TVShowForm from "./TVShowForm";
@@ -10,6 +9,7 @@ class CIT extends Component {
     static propTypes = {
         metadata: PropTypes.object,
         onComplete: PropTypes.func,
+        onCancel: PropTypes.func,
     };
 
     static defaultProps = {
@@ -33,6 +33,7 @@ class CIT extends Component {
     componentDidMount() {
         fetchSources((x) => this.setState({store: Object.assign({}, this.state.store, {sources: x})}));
         fetchTags((x) => this.setState({store: Object.assign({}, this.state.store, {tags: x})}));
+        fetchTVShows((x) => this.setState({store: Object.assign({}, this.state.store, {tvshows: x})}));
     }
 
     onCTSelected(ct) {
@@ -40,20 +41,20 @@ class CIT extends Component {
     };
 
     onFormSubmit(metadata) {
-        const data = Object.assign({}, this.state.metadata, metadata);
-        console.log("Submit: ", data);
-
-        // Call back if asked for
-        if (!!this.props.onComplete) {
+        if (this.props.onComplete) {
+            const data = Object.assign({}, this.state.metadata, metadata);
             this.props.onComplete(data);
+        } else {
+            this.onFormCancel();
         }
-
-        // Clear internal state
-        this.onFormCancel();
     }
 
-    onFormCancel() {
-        this.setState({metadata: CIT.defaultProps.metadata});
+    onFormCancel(e) {
+        if (this.props.onCancel) {
+            this.props.onCancel(e);
+        } else {
+            this.setState({metadata: CIT.defaultProps.metadata});
+        }
     }
 
     render() {
@@ -67,12 +68,14 @@ class CIT extends Component {
                     el = <LessonForm sources={store.sources}
                                      tags={store.tags}
                                      metadata={this.props.metadata}
-                                     onSubmit={(x) => this.onFormSubmit(x)}
-                                     onCancel={() => this.onFormCancel()}/>;
+                                     onSubmit={(e, x) => this.onFormSubmit(x)}
+                                     onCancel={(e) => this.onFormCancel(e)}/>;
                     break;
                 case "VIDEO_PROGRAM_CHAPTER":
-                    el = <TVShowForm onSubmit={(x) => this.onFormSubmit(x)}
-                                     onCancel={() => this.onFormCancel()}/>;
+                    el = <TVShowForm tvshows={store.tvshows}
+                                     metadata={this.props.metadata}
+                                     onSubmit={(e, x) => this.onFormSubmit(x)}
+                                     onCancel={(e) => this.onFormCancel(e)}/>;
                     break;
             }
 
