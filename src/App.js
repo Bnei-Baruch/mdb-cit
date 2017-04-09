@@ -25,6 +25,8 @@ class App extends Component {
             has_translation: true,
             collection_uid: "ukFliiGb",
             episode: 827,
+            sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
+            tags: ["7vtV1gDJ", "K9q0p0nq"],
         };
 
 

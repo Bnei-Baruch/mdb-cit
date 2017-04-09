@@ -1,45 +1,74 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Header, Icon, Input, Label, List, Segment, Table} from "semantic-ui-react";
 import TreeItemSelector from "./TreeItemSelector";
-import {today} from "./utils";
+import {findPath, today} from "./utils";
 import {LANGUAGES, LECTURERS} from "./consts";
 
 class LessonForm extends Component {
 
     static propTypes = {
-        sources: PropTypes.array,
-        tags: PropTypes.array,
+        availableSources: PropTypes.array,
+        availableTags: PropTypes.array,
         metadata: PropTypes.object,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
-        sources: [],
-        tags: [],
+        availableSources: [],
+        availableTags: [],
         metadata: {}
-    };
-
-    static initialState = {
-        language: "MLT",
-        lecturer: "rav",
-        has_translation: true,
-        part: 0,
-        sources: [],
-        tags: [],
-        manual_name: false
     };
 
     constructor(props) {
         super(props);
-        const state = Object.assign({}, LessonForm.initialState, props.metadata);
-        this.state = state;
-        state.auto_name = this.suggestName({});
+        this.state = this.getInitialState(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.availableSources.length > 0 &&
+            nextProps.metadata.sources &&
+            this.props.availableSources !== nextProps.availableSources) {
+            const sources = nextProps.metadata.sources.map(x => findPath(nextProps.availableSources, x));
+            this.setState({sources, auto_name: this.suggestName({sources})});
+        }
+
+        if (nextProps.availableTags.length > 0 &&
+            nextProps.metadata.tags &&
+            this.props.availableTags !== nextProps.availableTags) {
+            const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
+            this.setState({tags, auto_name: this.suggestName({tags})});
+        }
+    }
+
+    getInitialState(props) {
+        // This should be created a new every time or deep copied...
+        const initialState = {
+            language: "MLT",
+            lecturer: "rav",
+            has_translation: true,
+            part: 0,
+            sources: [],
+            tags: [],
+            manual_name: false
+        };
+
+        const state = Object.assign({}, initialState, props.metadata);
+        state.auto_name = this.suggestName(state);
+        state.sources = props.availableSources.length > 0 ? state.sources.map(x => findPath(props.availableSources, x)) : [];
+        state.tags = props.availableTags.length > 0 ? state.tags.map(x => findPath(props.availableTags, x)) : [];
+        return state;
     }
 
     onSubmit(e) {
-        // TODO: validations should go here
-        this.props.onSubmit(e, this.state);
+        const data = {...this.state};
+        data.sources = data.sources.map(x => x[x.length - 1].uid);
+        data.tags = data.tags.map(x => x[x.length - 1].uid);
+        this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
+    }
+
+    onCancel(e) {
+        this.setState(this.getInitialState(this.props), () => this.props.onCancel(e));
     }
 
     onLanguageChange(language) {
@@ -186,7 +215,7 @@ class LessonForm extends Component {
             .concat([{text: "מלא", value: -1}]);
 
         const {language, lecturer, has_translation, part, auto_name, manual_name} = this.state;
-        const {sources, tags} = this.props;
+        const {availableSources, availableTags} = this.props;
 
         return <Table>
             <Table.Header>
@@ -204,7 +233,7 @@ class LessonForm extends Component {
                                 <Header as="h5">חומר לימוד</Header>
                             </Segment>
                             <Segment>
-                                <TreeItemSelector tree={sources} onSelect={x => this.addSource(x)}/>
+                                <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
                                 {this.renderSelectedSources()}
                             </Segment>
                         </Segment.Group>
@@ -217,7 +246,8 @@ class LessonForm extends Component {
                                 <Header as="h5">תגיות</Header>
                             </Segment>
                             <Segment>
-                                <TreeItemSelector tree={tags} fieldLabel={x => x.label} onSelect={x => this.addTag(x)}/>
+                                <TreeItemSelector tree={availableTags} fieldLabel={x => x.label}
+                                                  onSelect={x => this.addTag(x)}/>
                                 {this.renderSelectedTags()}
                             </Segment>
                         </Segment.Group>
@@ -281,7 +311,7 @@ class LessonForm extends Component {
                 <Table.Row>
                     <Table.HeaderCell />
                     <Table.HeaderCell textAlign="right">
-                        <Button onClick={(e) => this.props.onCancel(e)}>בטל</Button>
+                        <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
                         <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
                     </Table.HeaderCell>
                 </Table.Row>

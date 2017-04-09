@@ -65,8 +65,8 @@ class CIT extends Component {
             switch (metadata.content_type) {
                 default:
                 case "LESSON_PART":
-                    el = <LessonForm sources={store.sources}
-                                     tags={store.tags}
+                    el = <LessonForm availableSources={store.sources}
+                                     availableTags={store.tags}
                                      metadata={this.props.metadata}
                                      onSubmit={(e, x) => this.onFormSubmit(x)}
                                      onCancel={(e) => this.onFormCancel(e)}/>;
