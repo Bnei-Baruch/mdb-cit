@@ -14,7 +14,9 @@ const Fetcher = (path, cb) => fetch(`${API_BACKEND}${path}`)
     .catch(ex => console.log(`get ${path}`, ex));
 
 export const fetchSources = (cb) => Fetcher('sources/hierarchy', cb);
+
 export const fetchTags = (cb) => Fetcher('tags/hierarchy', cb);
+
 export const fetchTVShows = (cb) => Fetcher('rest/collections/?content_type=VIDEO_PROGRAM&page_size=1000', data => {
     data.data.forEach(x => {
         let langOrder = ['he', 'en', 'ru'];
@@ -25,3 +27,14 @@ export const fetchTVShows = (cb) => Fetcher('rest/collections/?content_type=VIDE
     });
     cb(data.data);
 });
+
+export const activateCollection = (id, cb) => {
+    fetch(`${API_BACKEND}rest/collections/${id}/activate`, {method:"POST"})
+        .then(response => {
+            if (response.ok) {
+                return response.json().then(data => cb(data));
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .catch(ex => console.log("activate collection", id, ex));
+};

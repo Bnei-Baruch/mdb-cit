@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {fetchSources, fetchTags, fetchTVShows} from "./Store";
+import {activateCollection, fetchSources, fetchTags, fetchTVShows} from "./Store";
 import ContentTypeForm from "./ContentTypeForm";
 import LessonForm from "./LessonForm";
 import TVShowForm from "./TVShowForm";
@@ -57,6 +57,12 @@ class CIT extends Component {
         }
     }
 
+    onActivateShow(tvshow) {
+        activateCollection(tvshow.id, () => {
+            fetchTVShows((x) => this.setState({store: Object.assign({}, this.state.store, {tvshows: x})}));
+        })
+    }
+
     render() {
         const {store, metadata} = this.state;
 
@@ -75,7 +81,8 @@ class CIT extends Component {
                     el = <TVShowForm tvshows={store.tvshows}
                                      metadata={this.props.metadata}
                                      onSubmit={(e, x) => this.onFormSubmit(x)}
-                                     onCancel={(e) => this.onFormCancel(e)}/>;
+                                     onCancel={(e) => this.onFormCancel(e)}
+                                     onActivateShow={(e, x) => this.onActivateShow(x)}/>;
                     break;
             }
 

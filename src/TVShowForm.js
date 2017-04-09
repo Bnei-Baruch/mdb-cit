@@ -8,6 +8,7 @@ class TVShowForm extends Component {
     static propTypes = {
         tvshows: PropTypes.array,
         metadata: PropTypes.object,
+        onActivateShow: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
     };
@@ -29,9 +30,13 @@ class TVShowForm extends Component {
 
     constructor(props) {
         super(props);
+        this.state = this.getInitialState(props);
+    }
+
+    getInitialState(props) {
         const state = Object.assign({}, TVShowForm.initialState, props.metadata);
-        this.state = state;
-        state.auto_name = this.suggestName({});
+        state.auto_name = this.suggestName(state);
+        return state;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,12 +67,16 @@ class TVShowForm extends Component {
     }
 
     onSubmit(e) {
-        // TODO: validations should go here
         let data = {...this.state};
         data.collection_uid = data.active_tvshows[data.tv_show].uid;
         delete data["tv_show"];
         delete data["active_tvshows"];
-        this.props.onSubmit(e, data);
+
+        this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
+    }
+
+    onCancel(e) {
+        this.setState(this.getInitialState(this.props), () => this.props.onCancel(e));
     }
 
     onTVShowChange(tv_show) {
@@ -108,22 +117,36 @@ class TVShowForm extends Component {
     }
 
     getActiveShows(tvshows) {
-        return tvshows.filter(x => !x.properties.hasOwnProperty("active") || x.properties.active)
+        return tvshows.filter(x => this.isActive(x));
+    }
+
+    isActive(tvshow) {
+        return !tvshow.properties.hasOwnProperty("active") || tvshow.properties.active;
     }
 
     renderManageDropdown() {
         let options = this.props.tvshows.map((x, i) => {
+            const active = this.isActive(x),
+                action = active ?
+                    <Button circular icon="remove" floated="right" size="mini" color="red" title="Disable"
+                            onClick={(e) => this.props.onActivateShow(e, x)}
+                    /> :
+                    <Button circular icon="checkmark" floated="right" size="mini" color="green" title="Enable"
+                            onClick={(e) => this.props.onActivateShow(e, x)}/>;
             return {
-                content: <div><strong>{x.name}</strong><br/><span className="description">{x.properties.pattern}</span>
+                content: <div>
+                    {action}
+                    <strong>{x.name}</strong>
+                    <br/>
+                    <span className="description">{x.properties.pattern}</span>
                 </div>,
                 value: i,
             }
         });
 
-        return <Dropdown search fluid
-                         options={options}
-        />
-
+        return <Dropdown selection fluid
+                         placeholder="בחר תוכנית"
+                         options={options}/>
     }
 
     render() {
@@ -139,20 +162,20 @@ class TVShowForm extends Component {
             </Table.Header>
             <Table.Body>
                 <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Segment.Group horizontal>
-                            <Segment>
-                                <Header as="h5">שם התוכנית</Header>
-                                <Dropdown selection fluid
-                                          options={active_tvshows.map((x, i) => ({text: x.name, value: i}))}
-                                          value={tv_show}
-                                          onChange={(e, data) => this.onTVShowChange(data.value)}/>
-                            </Segment>
-                            <Segment>
-                                <Header as="h5">ניהול תוכניות</Header>
-                                {this.renderManageDropdown()}
-                            </Segment>
-                        </Segment.Group>
+                    <Table.Cell width={4}>
+                        <Segment>
+                            <Header as="h5">שם התוכנית</Header>
+                            <Dropdown selection
+                                      options={active_tvshows.map((x, i) => ({text: x.name, value: i}))}
+                                      value={tv_show}
+                                      onChange={(e, data) => this.onTVShowChange(data.value)}/>
+                        </Segment>
+                    </Table.Cell>
+                    <Table.Cell width={12}>
+                        <Segment>
+                            <Header as="h5">ניהול תוכניות</Header>
+                            {this.renderManageDropdown()}
+                        </Segment>
                     </Table.Cell>
                 </Table.Row>
                 <Table.Row>
@@ -212,7 +235,7 @@ class TVShowForm extends Component {
                 <Table.Row>
                     <Table.HeaderCell />
                     <Table.HeaderCell textAlign="right">
-                        <Button onClick={(e) => this.props.onCancel(e)}>בטל</Button>
+                        <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
                         <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
                     </Table.HeaderCell>
                 </Table.Row>
