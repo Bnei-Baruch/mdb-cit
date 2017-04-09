@@ -18,11 +18,12 @@ class App extends Component {
     render() {
         // const metadata = {};
         const metadata = {
-            // content_type: "LESSON_PART",
-            content_type: "VIDEO_PROGRAM_CHAPTER",
+            content_type: "LESSON_PART",
+            // content_type: "VIDEO_PROGRAM_CHAPTER",
             language: "HEB",
             lecturer: "rav",
             has_translation: true,
+            require_test: true,
             collection_uid: "ukFliiGb",
             episode: 827,
             sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],

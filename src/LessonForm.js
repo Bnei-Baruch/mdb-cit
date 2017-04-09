@@ -47,6 +47,7 @@ class LessonForm extends Component {
             language: "MLT",
             lecturer: "rav",
             has_translation: true,
+            require_test: false,
             part: 0,
             sources: [],
             tags: [],
@@ -72,19 +73,23 @@ class LessonForm extends Component {
     }
 
     onLanguageChange(language) {
-        this.setState({language, auto_name: this.suggestName({language})})
+        this.setState({language, auto_name: this.suggestName({language})});
     }
 
     onLecturerChange(lecturer) {
-        this.setState({lecturer, auto_name: this.suggestName({lecturer})})
+        this.setState({lecturer, auto_name: this.suggestName({lecturer})});
     }
 
     onTranslationChange(has_translation) {
-        this.setState({has_translation, auto_name: this.suggestName({has_translation})})
+        this.setState({has_translation, auto_name: this.suggestName({has_translation})});
+    }
+
+    onRequireTestChange(require_test) {
+        this.setState({require_test});
     }
 
     onPartChange(part) {
-        this.setState({part})
+        this.setState({part});
     }
 
     addSource(selection) {
@@ -214,7 +219,7 @@ class LessonForm extends Component {
             .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: i})))
             .concat([{text: "מלא", value: -1}]);
 
-        const {language, lecturer, has_translation, part, auto_name, manual_name} = this.state;
+        const {language, lecturer, has_translation, require_test, part, auto_name, manual_name} = this.state;
         const {availableSources, availableTags} = this.props;
 
         return <Table>
@@ -281,6 +286,11 @@ class LessonForm extends Component {
                                 <Checkbox label="מתורגם"
                                           checked={has_translation}
                                           onChange={(e, data) => this.onTranslationChange(data.checked)}/>
+                                <br/>
+                                <br/>
+                                <Checkbox label="צריך בדיקה"
+                                          checked={require_test}
+                                          onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
                             </Segment>
                         </Segment.Group>
                     </Table.Cell>
