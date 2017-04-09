@@ -137,9 +137,9 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags} = Object.assign({}, this.state, diff || {});
+        const {language, lecturer, has_translation, sources, tags, film_date} = Object.assign({}, this.state, diff || {});
         const prefix = language + "_" + (has_translation ? "o_" : "") + lecturer,
-            suffix = today() + "_lesson";
+            suffix = (film_date || today()) + "_lesson";
 
         // pattern is the deepest node in the source chain with a pattern
         let content = "";

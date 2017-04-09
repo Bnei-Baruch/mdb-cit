@@ -109,10 +109,19 @@ class TVShowForm extends Component {
     }
 
     suggestName(diff) {
-        const {tv_show, episode, language, lecturer, has_translation, active_tvshows} = Object.assign({}, this.state, diff || {});
+        const {
+            tv_show,
+            episode,
+            language,
+            lecturer,
+            has_translation,
+            active_tvshows,
+            film_date
+        } = Object.assign({}, this.state, diff || {});
         const show = active_tvshows[tv_show];
-        const name = language + "_" + (has_translation ? "o_" : "") + lecturer + "_" + today() + "_"
+        const name = language + "_" + (has_translation ? "o_" : "") + lecturer + "_" + (film_date || today()) + "_"
             + (show ? show.properties.pattern : "") + "_n" + episode;
+
         return name.toLowerCase().trim();
     }
 
