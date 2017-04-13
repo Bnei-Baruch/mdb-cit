@@ -13,9 +13,9 @@ const Fetcher = (path, cb) => fetch(`${API_BACKEND}${path}`)
     })
     .catch(ex => console.log(`get ${path}`, ex));
 
-export const fetchSources = (cb) => Fetcher('sources/hierarchy', cb);
+export const fetchSources = (cb) => Fetcher('hierarchy/sources/', cb);
 
-export const fetchTags = (cb) => Fetcher('tags/hierarchy', cb);
+export const fetchTags = (cb) => Fetcher('hierarchy/tags/', cb);
 
 export const fetchTVShows = (cb) => Fetcher('rest/collections/?content_type=VIDEO_PROGRAM&page_size=1000', data => {
     data.data.forEach(x => {

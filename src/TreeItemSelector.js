@@ -40,7 +40,7 @@ class TreeItemSelector extends Component {
         for (let i = 0; i < selection.length; i++) {
             const node = l[selection[i]];
             nodes.push(node);
-            l = node.children || node.sources || [];
+            l = node.children || [];
         }
 
         this.props.onSelect(nodes);
@@ -53,7 +53,7 @@ class TreeItemSelector extends Component {
                     <Dropdown.Item key={j}
                                    text={j + 1 + ". " + this.props.fieldLabel(x)}
                                    onClick={(e, data) =>
-                                       this.onSelectionChange(idx, j, (x.children || x.sources || []).length === 0)}/>)}
+                                       this.onSelectionChange(idx, j, (x.children || []).length === 0)}/>)}
             </Dropdown.Menu>
         </Dropdown>
     }
@@ -67,7 +67,7 @@ class TreeItemSelector extends Component {
 
         for (let i = 0; i < selection.length; i++) {
             let selectedChild = level[selection[i]],
-                nextLevel = selectedChild.children || selectedChild.sources || [],
+                nextLevel = selectedChild.children || [],
                 nlHasChildren = nextLevel.length > 0;
 
             crumbs.push((<Breadcrumb.Section key={i} link={nlHasChildren} active={!nlHasChildren}>

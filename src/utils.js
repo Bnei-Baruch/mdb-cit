@@ -48,7 +48,7 @@ export const findPath = (forest, uid) => {
             break;
         }
 
-        const childs = node.children || node.sources || [];
+        const childs = node.children || [];
         for (let i = 0; i < childs.length; i++) {
             s.push([path.concat([i]), childs[i]]);
         }
@@ -62,7 +62,7 @@ export const findPath = (forest, uid) => {
             const idx = finalPath[i],
                 node = level[idx];
             path.push(node);
-            level = node.children || node.sources;
+            level = node.children;
         }
     }
 
