@@ -30,41 +30,34 @@ export const extractI18n = (i18ns, languages, fields) => {
 
 export const findPath = (forest, uid) => {
 
-    // put trees in stack
+    // Put trees in stack
     let s = [];
     for (let i = 0; i < forest.length; i++) {
-        s.push([[i], forest[i]]);
+        s.push(forest[i], Number.NaN);
     }
 
-    // DFS forest to get path to requested node
-    let finalPath;
-    while (s.length > 0 && !finalPath) {
-        const n = s.pop(),
-            path = n[0],
-            node = n[1];
+    // DFS forest to find path to requested node.
+    // We simulate the recursive nature of such traversal with a marker for branching in.
+    // This way we can eliminate the recursion and perform correct bookkeeping of the actual path.
+    let path = [];
+    while (s.length > 0) {
+        const node = s.pop();
+        if (Number.isNaN(node)) {  // is marker ?
+            path.pop();
+            continue
+        }
 
+        path.push(node);
+        s.push(Number.NaN);
         if (node.uid === uid) {
-            finalPath = path;
-            break;
+            return path;
         }
 
         const childs = node.children || [];
         for (let i = 0; i < childs.length; i++) {
-            s.push([path.concat([i]), childs[i]]);
+            s.push(childs[i]);
         }
     }
 
-    // reconstruct real nodes from indexes
-    let path = [];
-    if (finalPath) {
-        let level = forest;
-        for (let i = 0; i < finalPath.length; i++) {
-            const idx = finalPath[i],
-                node = level[idx];
-            path.push(node);
-            level = node.children;
-        }
-    }
-
-    return path;
+    return [];
 };
