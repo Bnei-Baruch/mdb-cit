@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Header, Icon, Input, Label, List, Segment, Table} from "semantic-ui-react";
 import TreeItemSelector from "./TreeItemSelector";
 import {findPath, today} from "./utils";
-import {LANGUAGES, LECTURERS} from "./consts";
+import {LANGUAGES, LECTURERS, COLLECTION_TYPES} from "./consts";
 
 class LessonForm extends Component {
 
@@ -30,23 +30,24 @@ class LessonForm extends Component {
             nextProps.metadata.sources &&
             this.props.availableSources !== nextProps.availableSources) {
             const sources = nextProps.metadata.sources.map(x => findPath(nextProps.availableSources, x));
-            this.setState({sources, auto_name: this.suggestName({sources})});
+            this.setState({sources, ...this.suggestName({sources})});
         }
 
         if (nextProps.availableTags.length > 0 &&
             nextProps.metadata.tags &&
             this.props.availableTags !== nextProps.availableTags) {
             const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
-            this.setState({tags, auto_name: this.suggestName({tags})});
+            this.setState({tags, ...this.suggestName({tags})});
         }
     }
 
     getInitialState(props) {
         // This should be created a new every time or deep copied...
         const initialState = {
-            language: "MLT",
+            language: "mlt",
             lecturer: "rav",
             has_translation: true,
+            film_date: today(),
             require_test: false,
             part: 0,
             sources: [],
@@ -54,8 +55,8 @@ class LessonForm extends Component {
             manual_name: false
         };
 
-        const state = Object.assign({}, initialState, props.metadata);
-        state.auto_name = this.suggestName(state);
+        let state = Object.assign({}, initialState, props.metadata);
+        state = {...state, ...this.suggestName(state)};
         state.sources = props.availableSources.length > 0 ? state.sources.map(x => findPath(props.availableSources, x)) : [];
         state.tags = props.availableTags.length > 0 ? state.tags.map(x => findPath(props.availableTags, x)) : [];
         return state;
@@ -65,6 +66,8 @@ class LessonForm extends Component {
         const data = {...this.state};
         data.sources = data.sources.map(x => x[x.length - 1].uid);
         data.tags = data.tags.map(x => x[x.length - 1].uid);
+        data.final_name = data.manual_name || data.auto_name;
+        data.collection_type = COLLECTION_TYPES[data.content_type];
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
     }
 
@@ -73,15 +76,15 @@ class LessonForm extends Component {
     }
 
     onLanguageChange(language) {
-        this.setState({language, auto_name: this.suggestName({language})});
+        this.setState({language, ...this.suggestName({language})});
     }
 
     onLecturerChange(lecturer) {
-        this.setState({lecturer, auto_name: this.suggestName({lecturer})});
+        this.setState({lecturer, ...this.suggestName({lecturer})});
     }
 
     onTranslationChange(has_translation) {
-        this.setState({has_translation, auto_name: this.suggestName({has_translation})});
+        this.setState({has_translation, ...this.suggestName({has_translation})});
     }
 
     onRequireTestChange(require_test) {
@@ -103,13 +106,13 @@ class LessonForm extends Component {
         }
 
         sources.push(selection);
-        this.setState({sources, auto_name: this.suggestName({sources})})
+        this.setState({sources, ...this.suggestName({sources})})
     }
 
     removeSource(idx) {
         const sources = this.state.sources;
         sources.splice(idx, 1);
-        this.setState({sources, auto_name: this.suggestName({sources})})
+        this.setState({sources, ...this.suggestName({sources})})
     }
 
     addTag(selection) {
@@ -123,13 +126,13 @@ class LessonForm extends Component {
         }
 
         tags.push(selection);
-        this.setState({tags, auto_name: this.suggestName({tags})})
+        this.setState({tags, ...this.suggestName({tags})})
     }
 
     removeTag(idx) {
         const tags = this.state.tags;
         tags.splice(idx, 1);
-        this.setState({tags, auto_name: this.suggestName({tags})})
+        this.setState({tags, ...this.suggestName({tags})})
     }
 
     onManualEdit(manual_name) {
@@ -138,8 +141,8 @@ class LessonForm extends Component {
 
     suggestName(diff) {
         const {language, lecturer, has_translation, sources, tags, film_date} = Object.assign({}, this.state, diff || {});
-        const prefix = language + "_" + (has_translation ? "o_" : "") + lecturer,
-            suffix = (film_date || today()) + "_lesson";
+        const prefix = (has_translation ? "mlt" : language) + "_o_" + lecturer,
+            suffix = film_date + "_lesson-n" + (this.props.metadata.number || 1);
 
         // pattern is the deepest node in the source chain with a pattern
         let content = "";
@@ -179,7 +182,10 @@ class LessonForm extends Component {
             content = "content";
         }
 
-        return (prefix + "_" + content + "_" + suffix).toLowerCase().trim();
+        return {
+            auto_name: (prefix + "_" + content + "_" + suffix).toLowerCase().trim(),
+            pattern: content,
+        };
     }
 
     renderSelectedSources() {

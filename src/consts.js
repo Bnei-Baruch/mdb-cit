@@ -72,3 +72,17 @@ export const LECTURERS = [
     {text: "רב", value: "rav"},
     {text: "בלי רב", value: "norav"},
 ];
+
+export const COLLECTION_TYPES = {
+    "LESSON_PART" : "DAILY_LESSON",
+    "FULL_LESSON" : "DAILY_LESSON",
+    "VIDEO_PROGRAM_CHAPTER" : "VIDEO_PROGRAM",
+    "FRIENDS_GATHERING" : "WEEKLY_FRIENDS_GATHERING",
+    "MEAL" : "MEALS",
+    "LECTURE" : "LECTURE_SERIES",
+    "CHILDREN_LESSON_PART" : "LECTURE_SERIES",
+    "WOMEN_LESSON_PART" : "LECTURE_SERIES",
+    "CAMPUS_LESSON" : "LECTURE_SERIES",
+    "LC_LESSON" : "LECTURE_SERIES",
+    "VIRTUAL_LESSON" : "LECTURE_SERIES",
+};

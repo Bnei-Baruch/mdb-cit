@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Header, Input, Segment, Table} from "semantic-ui-react";
 import {today} from "./utils";
-import {LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";
+import {LANGUAGES, LECTURERS, MDB_LANGUAGES, COLLECTION_TYPES} from "./consts";
 
 class TVShowForm extends Component {
 
@@ -19,9 +19,10 @@ class TVShowForm extends Component {
     };
 
     static initialState = {
-        language: "HEB",
+        language: "heb",
         lecturer: "rav",
         has_translation: true,
+        film_date: today(),
         tv_show: 0,
         episode: 0,
         manual_name: false,
@@ -69,6 +70,9 @@ class TVShowForm extends Component {
     onSubmit(e) {
         let data = {...this.state};
         data.collection_uid = data.active_tvshows[data.tv_show].uid;
+        data.pattern = data.active_tvshows[data.tv_show].properties.pattern;
+        data.final_name = data.manual_name || data.auto_name;
+        data.collection_type = COLLECTION_TYPES[data.content_type];
         delete data["tv_show"];
         delete data["active_tvshows"];
 
@@ -119,7 +123,7 @@ class TVShowForm extends Component {
             film_date
         } = Object.assign({}, this.state, diff || {});
         const show = active_tvshows[tv_show];
-        const name = language + "_" + (has_translation ? "o_" : "") + lecturer + "_" + (film_date || today()) + "_"
+        const name = language + "_" + (has_translation ? "o_" : "") + lecturer + "_" + film_date + "_"
             + (show ? show.properties.pattern : "") + "_n" + episode;
 
         return name.toLowerCase().trim();
