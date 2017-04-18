@@ -1,5 +1,4 @@
 export const LANGUAGES = [
-    {text: "מולטי", value: "MLT"},
     {text: "עברית", value: "HEB"},
     {text: "אנגלית", value: "ENG"},
     {text: "רוסית", value: "RUS"},
