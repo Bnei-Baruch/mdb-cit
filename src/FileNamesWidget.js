@@ -30,7 +30,7 @@ const FileNamesWidget = (props) => {
 FileNamesWidget.propTypes = {
     onChange: PropTypes.func.isRequired,
     auto_name: PropTypes.string,
-    manual_name: PropTypes.string,
+    manual_name: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };
 
 export default FileNamesWidget;

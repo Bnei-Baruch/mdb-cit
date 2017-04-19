@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import {Container} from "semantic-ui-react";
-import ModalWrapper from "./ModalWrapper";
-// import CIT from "./CIT";
+// import ModalWrapper from "./ModalWrapper";
+import CIT from "./CIT";
 import "./App.css";
 
 class App extends Component {
@@ -34,10 +34,10 @@ class App extends Component {
         };
 
         return <Container>
-            <ModalWrapper metadata={metadata}
-                                       onComplete={(x) => this.onComplete(x)}
-                                       onCancel={(e) => this.onCancel()}/>
-            {/*<CIT metadata={metadata} onComplete={(x) => this.onComplete(x)}/>*/}
+            {/*<ModalWrapper metadata={metadata}*/}
+                                       {/*onComplete={(x) => this.onComplete(x)}*/}
+                                       {/*onCancel={(e) => this.onCancel()}/>*/}
+            <CIT metadata={metadata} onComplete={(x) => this.onComplete(x)}/>
         </Container>;
         //
         // return <div id="app" className="app" style={{width: "800px", margin: "0 auto"}}>

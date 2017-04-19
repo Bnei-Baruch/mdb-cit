@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {Button, Checkbox, Dropdown, Grid, Header, Input, Table} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
 import FileNamesWidget from "./FileNamesWidget";
 import {today} from "./utils";
 import {COLLECTION_TYPES, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";

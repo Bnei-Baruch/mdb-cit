@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from "react";
-import {Button, Checkbox, Dropdown, Header, Icon, Input, Label, List, Segment, Table} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Header, Icon, Label, List, Grid} from "semantic-ui-react";
 import TreeItemSelector from "./TreeItemSelector";
+import FileNamesWidget from "./FileNamesWidget";
 import {findPath, today} from "./utils";
 import {LANGUAGES, LECTURERS, COLLECTION_TYPES} from "./consts";
 
@@ -228,111 +229,75 @@ class LessonForm extends Component {
         const {language, lecturer, has_translation, require_test, part, auto_name, manual_name} = this.state;
         const {availableSources, availableTags} = this.props;
 
-        return <Table>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell colSpan={2}>
-                        <Header as="h2">פרטי השיעור</Header>
-                    </Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Segment.Group>
-                            <Segment>
-                                <Header as="h5">חומר לימוד</Header>
-                            </Segment>
-                            <Segment>
-                                <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
-                                {this.renderSelectedSources()}
-                            </Segment>
-                        </Segment.Group>
-                    </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Segment.Group>
-                            <Segment>
-                                <Header as="h5">תגיות</Header>
-                            </Segment>
-                            <Segment>
-                                <TreeItemSelector tree={availableTags} fieldLabel={x => x.label}
-                                                  onSelect={x => this.addTag(x)}/>
-                                {this.renderSelectedTags()}
-                            </Segment>
-                        </Segment.Group>
-                    </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Segment.Group horizontal>
-                            <Segment>
-                                <Header as="h5">שפה</Header>
-                                <Dropdown selection
-                                          options={LANGUAGES}
-                                          value={language}
-                                          onChange={(e, data) => this.onLanguageChange(data.value)}/>
-                            </Segment>
-                            <Segment>
-                                <Header as="h5">מרצה</Header>
-                                <Dropdown selection
-                                          options={LECTURERS}
-                                          value={lecturer}
-                                          onChange={(e, data) => this.onLecturerChange(data.value)}/>
-                            </Segment>
-                            <Segment>
-                                <Header as="h5">חלק</Header>
-                                <Dropdown selection
-                                          options={parts}
-                                          value={part}
-                                          onChange={(e, data) => this.onPartChange(data.value)}/>
-                            </Segment>
-                            <Segment>
-                                <Checkbox label="מתורגם"
-                                          checked={has_translation}
-                                          onChange={(e, data) => this.onTranslationChange(data.checked)}/>
-                                <br/>
-                                <br/>
-                                <Checkbox label="צריך בדיקה"
-                                          checked={require_test}
-                                          onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
-                            </Segment>
-                        </Segment.Group>
-                    </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Segment.Group>
-                            <Segment>
-                                <Header as="h5">שם אוטומטי</Header>
-                                {auto_name}
-                            </Segment>
-                            <Segment>
-                                <Header as="h5">שם ידני</Header>
-                                <Input fluid
-                                       focus={!!manual_name && manual_name !== auto_name}
-                                       onChange={(e, data) => this.onManualEdit(data.value)}/>
-                            </Segment>
-                            <Segment>
-                                <Header as="h5">שם סופי</Header>
-                                {manual_name || auto_name}
-                            </Segment>
-                        </Segment.Group>
-                    </Table.Cell>
-                </Table.Row>
-            </Table.Body>
-
-            <Table.Footer>
-                <Table.Row>
-                    <Table.HeaderCell />
-                    <Table.HeaderCell textAlign="right">
-                        <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
-                        <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
-                    </Table.HeaderCell>
-                </Table.Row>
-            </Table.Footer>
-        </Table>;
+        return <Grid stackable container divided="vertically">
+            <Grid.Row columns={1}>
+                <Grid.Column>
+                    <Header as="h2">פרטי השיעור</Header>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+                <Grid.Column>
+                    <Header as="h5">חומר לימוד</Header>
+                    <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
+                    {this.renderSelectedSources()}
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+                <Grid.Column>
+                    <Header as="h5">תגיות</Header>
+                    <TreeItemSelector tree={availableTags}
+                                      fieldLabel={x => x.label}
+                                      onSelect={x => this.addTag(x)}/>
+                    {this.renderSelectedTags()}
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={4}>
+                <Grid.Column width={4}>
+                    <Header as="h5">שפה</Header>
+                    <Dropdown selection fluid
+                              options={LANGUAGES}
+                              value={language}
+                              onChange={(e, data) => this.onLanguageChange(data.value)}/>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                    <Header as="h5">מרצה</Header>
+                    <Dropdown selection fluid
+                              options={LECTURERS}
+                              value={lecturer}
+                              onChange={(e, data) => this.onLecturerChange(data.value)}/>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                    <Header as="h5">חלק</Header>
+                    <Dropdown selection
+                              options={parts}
+                              value={part}
+                              onChange={(e, data) => this.onPartChange(data.value)}/>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                    <Checkbox label="מתורגם"
+                              checked={has_translation}
+                              onChange={(e, data) => this.onTranslationChange(data.checked)}/>
+                    <br/>
+                    <br/>
+                    <Checkbox label="צריך בדיקה"
+                              checked={require_test}
+                              onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+                <Grid.Column>
+                    <FileNamesWidget auto_name={auto_name}
+                                     manual_name={manual_name}
+                                     onChange={(e, data) => this.onManualEdit(data.value)}/>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={1} textAlign="right">
+                <Grid.Column>
+                    <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
+                    <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
+                </Grid.Column>
+            </Grid.Row>
+        </Grid>;
     };
 }
 

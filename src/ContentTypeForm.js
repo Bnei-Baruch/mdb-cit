@@ -13,11 +13,6 @@ const ContentTypeForm = (props) => {
     ];
 
     return <Grid columns="equal">
-            <Grid.Row>
-                <Grid.Column>
-                    <Header size="huge" textAlign="left">בחר סוג תוכן</Header>
-                </Grid.Column>
-            </Grid.Row>
             <Grid.Row columns={2}>
                 <Grid.Column>
                     <Button fluid
