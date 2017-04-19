@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
 import FileNamesWidget from "./FileNamesWidget";
-import {today} from "./utils";
+import {today, isActive} from "./utils";
 import {COLLECTION_TYPES, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";
 
 class TVShowForm extends Component {
@@ -119,11 +119,12 @@ class TVShowForm extends Component {
     }
 
     suggestName(diff) {
-        const { tv_show, episode, language, lecturer, has_translation, active_tvshows, capture_date} =
+        const {tv_show, episode, language, lecturer, has_translation, active_tvshows, capture_date} =
             Object.assign({}, this.state, diff || {});
         const show = active_tvshows[tv_show];
 
         const name = (has_translation ? "mlt" : language) +
+            "_o_" +
             lecturer +
             "_" +
             capture_date +
@@ -136,11 +137,7 @@ class TVShowForm extends Component {
     }
 
     getActiveShows(tvshows) {
-        return tvshows.filter(x => this.isActive(x));
-    }
-
-    isActive(tvshow) {
-        return !tvshow.properties.hasOwnProperty("active") || tvshow.properties.active;
+        return tvshows.filter(x => isActive(x));
     }
 
     renderManageDropdown() {

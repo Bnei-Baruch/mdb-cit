@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from "react";
-import {activateCollection, fetchSources, fetchTags, fetchTVShows} from "./Store";
+import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./Store";
 import ContentTypeForm from "./ContentTypeForm";
 import LessonForm from "./LessonForm";
 import TVShowForm from "./TVShowForm";
 import GenericContentForm from "./GenericContentForm";
+import {CONTENT_TYPE_IDS, CT_VIDEO_PROGRAM, CT_LESSON_PART, CT_VIDEO_PROGRAM_CHAPTER} from "./consts";
 
 
 class CIT extends Component {
@@ -19,7 +20,7 @@ class CIT extends Component {
             store: {
                 sources: [],
                 tags: [],
-                tvshows: [],
+                collections: {},
             },
         };
     }
@@ -27,7 +28,7 @@ class CIT extends Component {
     componentDidMount() {
         fetchSources((x) => this.setState({store: Object.assign({}, this.state.store, {sources: x})}));
         fetchTags((x) => this.setState({store: Object.assign({}, this.state.store, {tags: x})}));
-        fetchTVShows((x) => this.setState({store: Object.assign({}, this.state.store, {tvshows: x})}));
+        fetchCollections((x) => this.setState({store: {...this.state.store, collections: x}}));
     }
 
     onCTSelected(content_type) {
@@ -52,9 +53,9 @@ class CIT extends Component {
     }
 
     onActivateShow(tvshow) {
-        activateCollection(tvshow.id, () => {
-            fetchTVShows((x) => this.setState({store: Object.assign({}, this.state.store, {tvshows: x})}));
-        })
+        activateCollection(tvshow.id, () =>
+            fetchCollections((x) => this.setState({store: {...this.state.store, collections: x}}))
+        )
     }
 
     render() {
@@ -63,18 +64,19 @@ class CIT extends Component {
         let el;
         if (!!content_type) {
             switch (content_type) {
-                case "LESSON_PART":
+                case CT_LESSON_PART:
                     el = <LessonForm metadata={{...this.props.metadata, content_type}}
                                      onSubmit={(e, x) => this.onFormSubmit(x)}
                                      onCancel={(e) => this.onFormCancel(e)}
                                      availableSources={store.sources}
-                                     availableTags={store.tags}/>;
+                                     availableTags={store.tags}
+                                     availableEvents={store.collections}/>;
                     break;
-                case "VIDEO_PROGRAM_CHAPTER":
+                case CT_VIDEO_PROGRAM_CHAPTER:
                     el = <TVShowForm metadata={{...this.props.metadata, content_type}}
                                      onSubmit={(e, x) => this.onFormSubmit(x)}
                                      onCancel={(e) => this.onFormCancel(e)}
-                                     tvshows={store.tvshows}
+                                     tvshows={store.collections[CONTENT_TYPE_IDS[CT_VIDEO_PROGRAM]]}
                                      onActivateShow={(e, x) => this.onActivateShow(x)}/>;
                     break;
                 default:

@@ -28,6 +28,10 @@ export const extractI18n = (i18ns, languages, fields) => {
     })
 };
 
+export const isActive = (collection) => {
+    return !collection.properties.hasOwnProperty("active") || collection.properties.active;
+};
+
 export const findPath = (forest, uid) => {
 
     // Put trees in stack
