@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from "react";
-import {Button, Checkbox, Dropdown, Header, Icon, Label, List, Grid} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "semantic-ui-react";
 import TreeItemSelector from "./TreeItemSelector";
 import FileNamesWidget from "./FileNamesWidget";
 import {findPath, today} from "./utils";
-import {LANGUAGES, LECTURERS, COLLECTION_TYPES} from "./consts";
+import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
 
 class LessonForm extends Component {
 
@@ -93,7 +93,7 @@ class LessonForm extends Component {
     }
 
     onPartChange(part) {
-        this.setState({part});
+        this.setState({part, ...this.suggestName({part})});
     }
 
     addSource(selection) {
@@ -141,51 +141,62 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags, film_date} = Object.assign({}, this.state, diff || {});
-        const prefix = (has_translation ? "mlt" : language) + "_o_" + lecturer,
-            suffix = film_date + "_lesson-n" + (this.props.metadata.number || 1);
+        const {language, lecturer, has_translation, sources, tags, film_date, number, part} =
+            Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
-        let content = "";
+        let pattern = "";
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
             for (let j = source.length - 1; j >= 0; j--) {
                 const s = source[j];
                 if (!!s.pattern) {
-                    content = s.pattern;
+                    pattern = s.pattern;
                     break;
                 }
             }
-            if (content !== "") {
+            if (pattern !== "") {
                 break;
             }
         }
 
-        // if not source take pattern from tags, same logic as above
-        if (content === "") {
+        // if no source take pattern from tags, same logic as above
+        if (pattern === "") {
             for (let i = 0; i < tags.length; i++) {
                 const tag = tags[i];
                 for (let j = tag.length - 1; j >= 0; j--) {
                     const t = tag[j];
                     if (!!t.pattern) {
-                        content = t.pattern;
+                        pattern = t.pattern;
                         break;
                     }
                 }
-                if (content !== "") {
+                if (pattern !== "") {
                     break;
                 }
             }
         }
 
-        // default value
-        if (content === "") {
-            content = "content";
+        // override lesson preparation value
+        if (part === 0) {
+            pattern = "achana";
         }
 
+        const name = (has_translation ? "mlt" : language) +
+            "_o_" +
+            lecturer +
+            "_" +
+            film_date +
+            "_" +
+            pattern +
+            "_lesson_n" +
+            (number || 1) +
+            "_p" +
+            part;
+
         return {
-            auto_name: (prefix + "_" + content + "_" + suffix).toLowerCase().trim(),
-            pattern: content,
+            pattern,
+            auto_name: name.toLowerCase().trim(),
         };
     }
 

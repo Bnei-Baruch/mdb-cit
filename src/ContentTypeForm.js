@@ -4,12 +4,12 @@ import {Grid, Button, Dropdown, Header} from "semantic-ui-react";
 const ContentTypeForm = (props) => {
 
     const otherOptions = [
+        {text: "הרצאה", value: "LECTURE"},
         {text: "שיעור קמפוס", value: "CAMPUS_LESSON"},
         {text: "שיעור לרנינג סנטר", value: "LC_LESSON"},
         {text: "שיעור וירטואלי", value: "VIRTUAL_LESSON"},
         {text: "שיעור נשים", value: "WOMEN_LESSON_PART"},
         {text: "שיעור ילדים", value: "CHILDREN_LESSON_PART"},
-        {text: "הרצאה", value: "LECTURE"},
     ];
 
     return <Grid columns="equal">

@@ -3,25 +3,19 @@ import {activateCollection, fetchSources, fetchTags, fetchTVShows} from "./Store
 import ContentTypeForm from "./ContentTypeForm";
 import LessonForm from "./LessonForm";
 import TVShowForm from "./TVShowForm";
+import GenericContentForm from "./GenericContentForm";
 
 
 class CIT extends Component {
     static propTypes = {
-        metadata: PropTypes.object,
         onComplete: PropTypes.func,
         onCancel: PropTypes.func,
-    };
-
-    static defaultProps = {
-        metadata: {
-            content_type: null
-        }
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            metadata: props.metadata,
+            content_type: props.metadata ? props.metadata.content_type : null,
             store: {
                 sources: [],
                 tags: [],
@@ -36,13 +30,13 @@ class CIT extends Component {
         fetchTVShows((x) => this.setState({store: Object.assign({}, this.state.store, {tvshows: x})}));
     }
 
-    onCTSelected(ct) {
-        this.setState({metadata: {content_type: ct}});
+    onCTSelected(content_type) {
+        this.setState({content_type});
     };
 
     onFormSubmit(metadata) {
         if (this.props.onComplete) {
-            const data = Object.assign({}, this.state.metadata, metadata);
+            const data = {...metadata, content_type: this.state.content_type};
             this.props.onComplete(data);
         } else {
             this.onFormCancel();
@@ -53,7 +47,7 @@ class CIT extends Component {
         if (this.props.onCancel) {
             this.props.onCancel(e);
         } else {
-            this.setState({metadata: CIT.defaultProps.metadata});
+            this.setState({content_type: null});
         }
     }
 
@@ -64,25 +58,29 @@ class CIT extends Component {
     }
 
     render() {
-        const {store, metadata} = this.state;
+        const {store, content_type} = this.state;
 
         let el;
-        if (!!metadata.content_type) {
-            switch (metadata.content_type) {
-                default:
+        if (!!content_type) {
+            switch (content_type) {
                 case "LESSON_PART":
-                    el = <LessonForm availableSources={store.sources}
-                                     availableTags={store.tags}
-                                     metadata={this.props.metadata}
-                                     onSubmit={(e, x) => this.onFormSubmit(x)}
-                                     onCancel={(e) => this.onFormCancel(e)}/>;
-                    break;
-                case "VIDEO_PROGRAM_CHAPTER":
-                    el = <TVShowForm tvshows={store.tvshows}
-                                     metadata={this.props.metadata}
+                    el = <LessonForm metadata={{...this.props.metadata, content_type}}
                                      onSubmit={(e, x) => this.onFormSubmit(x)}
                                      onCancel={(e) => this.onFormCancel(e)}
+                                     availableSources={store.sources}
+                                     availableTags={store.tags}/>;
+                    break;
+                case "VIDEO_PROGRAM_CHAPTER":
+                    el = <TVShowForm metadata={{...this.props.metadata, content_type}}
+                                     onSubmit={(e, x) => this.onFormSubmit(x)}
+                                     onCancel={(e) => this.onFormCancel(e)}
+                                     tvshows={store.tvshows}
                                      onActivateShow={(e, x) => this.onActivateShow(x)}/>;
+                    break;
+                default:
+                    el = <GenericContentForm metadata={{...this.props.metadata, content_type}}
+                                             onSubmit={(e, x) => this.onFormSubmit(x)}
+                                             onCancel={(e) => this.onFormCancel(e)}/>;
                     break;
             }
 
