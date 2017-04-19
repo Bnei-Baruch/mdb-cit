@@ -27,7 +27,7 @@ class GenericContentForm extends Component {
             language: "heb",
             lecturer: "rav",
             has_translation: true,
-            film_date: today(),
+            capture_date: today(),
             manual_name: false,
         };
         const state = Object.assign({}, defaultState, props.metadata);
@@ -65,14 +65,14 @@ class GenericContentForm extends Component {
     }
 
     suggestName(diff) {
-        const { language, lecturer, has_translation, film_date, content_type, number} =
+        const { language, lecturer, has_translation, capture_date, content_type, number} =
             Object.assign({}, this.state, diff || {});
 
         const name = (has_translation ? "mlt" : language) +
             "_o_" +
             lecturer +
             "_" +
-            film_date +
+            capture_date +
             "_" +
             content_type +
             "_n" +

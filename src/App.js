@@ -25,7 +25,7 @@ class App extends Component {
             lecturer: "rav",
             has_translation: true,
             require_test: true,
-            // film_date: "2017-04-11",
+            // capture_date: "2017-04-11",
             collection_uid: "ukFliiGb",
             episode: "827",
             number: 2,

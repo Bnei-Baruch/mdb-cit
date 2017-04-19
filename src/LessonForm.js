@@ -48,7 +48,7 @@ class LessonForm extends Component {
             language: "mlt",
             lecturer: "rav",
             has_translation: true,
-            film_date: today(),
+            capture_date: today(),
             require_test: false,
             part: "0",
             sources: [],
@@ -141,7 +141,7 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags, film_date, number, part} =
+        const {language, lecturer, has_translation, sources, tags, capture_date, number, part} =
             Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
@@ -186,7 +186,7 @@ class LessonForm extends Component {
             "_o_" +
             lecturer +
             "_" +
-            film_date +
+            capture_date +
             "_" +
             pattern +
             "_lesson_n" +
