@@ -32,7 +32,7 @@ class TVShowForm extends Component {
             has_translation: true,
             film_date: today(),
             tv_show: 0,
-            episode: 0,
+            episode: "1",
             manual_name: false,
             active_tvshows: [],
         };

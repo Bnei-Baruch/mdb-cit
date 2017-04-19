@@ -50,7 +50,7 @@ class LessonForm extends Component {
             has_translation: true,
             film_date: today(),
             require_test: false,
-            part: 0,
+            part: "0",
             sources: [],
             tags: [],
             manual_name: false
@@ -178,7 +178,7 @@ class LessonForm extends Component {
         }
 
         // override lesson preparation value
-        if (part === 0) {
+        if (part === "0") {
             pattern = "achana";
         }
 
@@ -191,8 +191,8 @@ class LessonForm extends Component {
             pattern +
             "_lesson_n" +
             (number || 1) +
-            "_p" +
-            part;
+            "_" +
+            (part === "full" ? part : "p" + part);
 
         return {
             pattern,
@@ -233,9 +233,9 @@ class LessonForm extends Component {
     }
 
     render() {
-        const parts = [{text: "הכנה", value: 0}]
-            .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: i})))
-            .concat([{text: "מלא", value: -1}]);
+        const parts = [{text: "הכנה", value: "0"}]
+            .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: "" + i})))
+            .concat([{text: "מלא", value: "full"}]);
 
         const {language, lecturer, has_translation, require_test, part, auto_name, manual_name} = this.state;
         const {availableSources, availableTags} = this.props;

@@ -27,7 +27,7 @@ class App extends Component {
             require_test: true,
             // film_date: "2017-04-11",
             collection_uid: "ukFliiGb",
-            episode: 827,
+            episode: "827",
             number: 2,
             // sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
             // tags: ["7vtV1gDJ", "K9q0p0nq"],
