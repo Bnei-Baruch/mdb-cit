@@ -18,25 +18,30 @@ class TVShowForm extends Component {
         metadata: {}
     };
 
-    static initialState = {
-        language: "heb",
-        lecturer: "rav",
-        has_translation: true,
-        film_date: today(),
-        tv_show: 0,
-        episode: 0,
-        manual_name: false,
-        active_tvshows: [],
-    };
-
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
     }
 
     getInitialState(props) {
-        const state = Object.assign({}, TVShowForm.initialState, props.metadata);
+        // This should be created a new every time or deep copied...
+        const defaultState = {
+            language: "heb",
+            lecturer: "rav",
+            has_translation: true,
+            film_date: today(),
+            tv_show: 0,
+            episode: 0,
+            manual_name: false,
+            active_tvshows: [],
+        };
+        const state = Object.assign({}, defaultState, props.metadata);
         state.auto_name = this.suggestName(state);
+        state.active_tvshows = this.getActiveShows(props.tvshows);
+        if (!!props.metadata.collection_uid) {
+            const idx = state.active_tvshows.findIndex(x => x.uid === props.metadata.collection_uid);
+            state.tv_show = idx > -1 ? idx : 0;
+        }
         return state;
     }
 

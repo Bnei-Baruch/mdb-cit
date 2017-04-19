@@ -43,7 +43,7 @@ class LessonForm extends Component {
 
     getInitialState(props) {
         // This should be created a new every time or deep copied...
-        const initialState = {
+        const defaultState = {
             language: "mlt",
             lecturer: "rav",
             has_translation: true,
@@ -55,7 +55,7 @@ class LessonForm extends Component {
             manual_name: false
         };
 
-        let state = Object.assign({}, initialState, props.metadata);
+        let state = Object.assign({}, defaultState, props.metadata);
         state = {...state, ...this.suggestName(state)};
         state.sources = props.availableSources.length > 0 ? state.sources.map(x => findPath(props.availableSources, x)) : [];
         state.tags = props.availableTags.length > 0 ? state.tags.map(x => findPath(props.availableTags, x)) : [];

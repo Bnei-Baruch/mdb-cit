@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
-import ModalWrapper from "./ModalWrapper";
+// import ModalWrapper from "./ModalWrapper";
+import CIT from "./CIT";
 import "./App.css";
 import logo from "./KL_Tree_64.png";
 
@@ -18,7 +19,7 @@ class App extends Component {
     render() {
         // const metadata = {};
         const metadata = {
-            content_type: "LESSON_PART",
+            // content_type: "LESSON_PART",
             // content_type: "VIDEO_PROGRAM_CHAPTER",
             language: "heb",
             lecturer: "rav",
@@ -28,8 +29,8 @@ class App extends Component {
             collection_uid: "ukFliiGb",
             episode: 827,
             number: 2,
-            sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
-            tags: ["7vtV1gDJ", "K9q0p0nq"],
+            // sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
+            // tags: ["7vtV1gDJ", "K9q0p0nq"],
         };
 
         return (
@@ -40,9 +41,10 @@ class App extends Component {
                 </div>
                 <br/>
                 <div className="app-content">
-                    <ModalWrapper metadata={metadata}
-                                  onComplete={(x) => this.onComplete(x)}
-                                  onCancel={(e) => this.onCancel()}/>
+                    <CIT metadata={metadata} onComplete={(x) => this.onComplete(x)}/>
+                    {/*<ModalWrapper metadata={metadata}*/}
+                                  {/*onComplete={(x) => this.onComplete(x)}*/}
+                                  {/*onCancel={(e) => this.onCancel()}/>*/}
                 </div>
             </div>
         );
