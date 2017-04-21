@@ -54,6 +54,7 @@ class LessonForm extends Component {
             manual_name: false,
             sources: [],
             tags: [],
+            errors: {},
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
@@ -65,6 +66,16 @@ class LessonForm extends Component {
 
     onSubmit(e) {
         const data = {...this.state};
+
+        // validate content classification or preparation
+        if (data.part !== "0" &&
+            (data.sources.length === 0 && data.tags.length === 0)) {
+            this.setState({errors: { ...data.errors, noContent: true}});
+            return;
+        }
+
+        // validations passed, return data to callback
+        delete data["errors"];
         data.sources = data.sources.map(x => x[x.length - 1].uid);
         data.tags = data.tags.map(x => x[x.length - 1].uid);
         data.final_name = data.manual_name || data.auto_name;
@@ -97,7 +108,7 @@ class LessonForm extends Component {
     }
 
     addSource(selection) {
-        let sources = this.state.sources;
+        let {sources, errors} = this.state;
 
         // Prevent duplicates
         for (let i = 0; i < sources.length; i++) {
@@ -107,17 +118,18 @@ class LessonForm extends Component {
         }
 
         sources.push(selection);
-        this.setState({sources, ...this.suggestName({sources})})
+        delete errors["noContent"];
+        this.setState({sources, errors, ...this.suggestName({sources})});
     }
 
     removeSource(idx) {
         const sources = this.state.sources;
         sources.splice(idx, 1);
-        this.setState({sources, ...this.suggestName({sources})})
+        this.setState({sources, ...this.suggestName({sources})});
     }
 
     addTag(selection) {
-        let tags = this.state.tags;
+        let {tags, errors} = this.state;
 
         // Prevent duplicates
         for (let i = 0; i < tags.length; i++) {
@@ -127,13 +139,14 @@ class LessonForm extends Component {
         }
 
         tags.push(selection);
-        this.setState({tags, ...this.suggestName({tags})})
+        delete errors["noContent"];
+        this.setState({tags, errors, ...this.suggestName({tags})});
     }
 
     removeTag(idx) {
         const tags = this.state.tags;
         tags.splice(idx, 1);
-        this.setState({tags, ...this.suggestName({tags})})
+        this.setState({tags, ...this.suggestName({tags})});
     }
 
     onManualEdit(manual_name) {
@@ -237,7 +250,7 @@ class LessonForm extends Component {
             .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: "" + i})))
             .concat([{text: "מלא", value: "full"}]);
 
-        const {language, lecturer, has_translation, require_test, part, auto_name, manual_name} = this.state;
+        const {language, lecturer, has_translation, require_test, part, auto_name, manual_name, errors} = this.state;
         const {availableSources, availableTags} = this.props;
 
         return <Grid stackable container divided="vertically">
@@ -248,14 +261,24 @@ class LessonForm extends Component {
             </Grid.Row>
             <Grid.Row columns={1}>
                 <Grid.Column>
-                    <Header as="h5">חומר לימוד</Header>
+                    <Header as="h5">
+                        חומר לימוד
+                        {errors && errors.noContent ?
+                            <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
+                            : null}
+                    </Header>
                     <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
                     {this.renderSelectedSources()}
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
                 <Grid.Column>
-                    <Header as="h5">תגיות</Header>
+                    <Header as="h5">
+                        תגיות
+                        {errors && errors.noContent ?
+                            <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
+                            : null}
+                    </Header>
                     <TreeItemSelector tree={availableTags}
                                       fieldLabel={x => x.label}
                                       onSelect={x => this.addTag(x)}/>
