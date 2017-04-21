@@ -112,7 +112,7 @@ class LessonForm extends Component {
 
         // Prevent duplicates
         for (let i = 0; i < sources.length; i++) {
-            if (sources[i].every((x, j) => selection[j] === x)) {
+            if (sources[i].length === selection.length && sources[i].every((x, j) => selection[j] === x)) {
                 return;
             }
         }
@@ -133,7 +133,7 @@ class LessonForm extends Component {
 
         // Prevent duplicates
         for (let i = 0; i < tags.length; i++) {
-            if (tags[i].every((x, j) => selection[j] === x)) {
+            if (tags[i].length === selection.length && tags[i].every((x, j) => selection[j] === x)) {
                 return;
             }
         }
