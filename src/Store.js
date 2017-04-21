@@ -17,17 +17,6 @@ export const fetchSources = (cb) => Fetcher('hierarchy/sources/', cb);
 
 export const fetchTags = (cb) => Fetcher('hierarchy/tags/', cb);
 
-export const fetchTVShows = (cb) => Fetcher('rest/collections/?content_type=VIDEO_PROGRAM&page_size=1000', data => {
-    data.data.forEach(x => {
-        let langOrder = ['he', 'en', 'ru'];
-        if (!!x.properties.default_language) {
-            langOrder.unshift(x.properties.default_language);
-        }
-        x['name'] = extractI18n(x['i18n'], langOrder, ['name'])[0];
-    });
-    cb(data.data);
-});
-
 export const fetchCollections = (cb) => {
     const contentTypes = ['VIDEO_PROGRAM', 'CONGRESS'].map(x => `content_type=${x}`).join("&");
     return Fetcher('rest/collections/?page_size=1000&' + contentTypes, data => {

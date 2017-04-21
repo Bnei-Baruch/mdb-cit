@@ -142,7 +142,7 @@ class TVShowForm extends Component {
 
     renderManageDropdown() {
         let options = this.props.tvshows.map((x, i) => {
-            const active = this.isActive(x),
+            const active = isActive(x),
                 action = active ?
                     <Button circular icon="remove" floated="right" size="mini" color="red" title="Disable"
                             onClick={(e) => this.props.onActivateShow(e, x)}

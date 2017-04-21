@@ -2,15 +2,14 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "semantic-ui-react";
 import TreeItemSelector from "./TreeItemSelector";
 import FileNamesWidget from "./FileNamesWidget";
-import {findPath, isActive, today} from "./utils";
-import {COLLECTION_TYPES, CONTENT_TYPE_IDS, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS} from "./consts";
+import {findPath, today} from "./utils";
+import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
 
 class LessonForm extends Component {
 
     static propTypes = {
         availableSources: PropTypes.array,
         availableTags: PropTypes.array,
-        availableEvents: PropTypes.object,
         metadata: PropTypes.object,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
@@ -19,7 +18,6 @@ class LessonForm extends Component {
     static defaultProps = {
         availableSources: [],
         availableTags: [],
-        availableEvents: [],
         metadata: {}
     };
 
@@ -42,13 +40,6 @@ class LessonForm extends Component {
             const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
             this.setState({tags, ...this.suggestName({tags})});
         }
-
-        if (nextProps.availableEvents.length > 0 &&
-            nextProps.metadata.events &&
-            this.props.availableEvents !== nextProps.availableEvents) {
-            const events = nextProps.metadata.events;
-            this.setState({events, ...this.suggestName({events})});
-        }
     }
 
     getInitialState(props) {
@@ -63,7 +54,6 @@ class LessonForm extends Component {
             manual_name: false,
             sources: [],
             tags: [],
-            events: [],
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
@@ -104,10 +94,6 @@ class LessonForm extends Component {
 
     onPartChange(part) {
         this.setState({part, ...this.suggestName({part})});
-    }
-
-    onEventsChange(events) {
-        this.setState({events, ...this.suggestName({events})});
     }
 
     addSource(selection) {
@@ -155,7 +141,7 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags, capture_date, number, part, events} =
+        const {language, lecturer, has_translation, sources, tags, capture_date, number, part} =
             Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
@@ -171,15 +157,6 @@ class LessonForm extends Component {
             }
             if (pattern !== "") {
                 break;
-            }
-        }
-
-        // if no source take event
-        if (pattern === "" && events.length > 0) {
-            const uid = events[0],
-                event = this.getActiveEvents().find(x => x.uid === uid);
-            if (!!event) {
-                pattern = "achana-le-" + event.properties.pattern;
             }
         }
 
@@ -221,19 +198,6 @@ class LessonForm extends Component {
             pattern,
             auto_name: name.toLowerCase().trim(),
         };
-    }
-
-    getActiveEvents() {
-        const available = this.props.availableEvents;
-
-        let active = [];
-        Object.keys(available).forEach(k => {
-            if (k !== "" + CONTENT_TYPE_IDS[CT_VIDEO_PROGRAM]) {
-                Array.prototype.push.apply(active, available[k].filter(x => isActive(x)));
-            }
-        });
-
-        return active;
     }
 
     renderSelectedSources() {
@@ -289,21 +253,13 @@ class LessonForm extends Component {
                     {this.renderSelectedSources()}
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={2}>
-                <Grid.Column width={8}>
+            <Grid.Row columns={1}>
+                <Grid.Column>
                     <Header as="h5">תגיות</Header>
                     <TreeItemSelector tree={availableTags}
                                       fieldLabel={x => x.label}
                                       onSelect={x => this.addTag(x)}/>
                     {this.renderSelectedTags()}
-                </Grid.Column>
-                <Grid.Column width={8}>
-                    <Header as="h5">אירועים</Header>
-                    <Dropdown multiple selection fluid
-                              text="בחר אירוע"
-                              options={this.getActiveEvents().map(x => ({text: x.name, value: x.uid}))}
-                              value={this.state.events}
-                              onChange={(e, data) => this.onEventsChange(data.value)}/>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={4}>
