@@ -73,6 +73,11 @@ export const LECTURERS = [
     {text: "בלי רב", value: "norav"},
 ];
 
+export const ARTIFACT_TYPES = [
+    {text: "תוכן מרכזי", value: "main"},
+    {text: "קטעי מקור", value: "kitei_makor"},
+];
+
 export const COLLECTION_TYPES = {
     "LESSON_PART": "DAILY_LESSON",
     "FULL_LESSON": "DAILY_LESSON",

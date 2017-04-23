@@ -3,7 +3,7 @@ import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "seman
 import TreeItemSelector from "./TreeItemSelector";
 import FileNamesWidget from "./FileNamesWidget";
 import {findPath, today} from "./utils";
-import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
+import {ARTIFACT_TYPES, COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
 
 class LessonForm extends Component {
 
@@ -46,11 +46,12 @@ class LessonForm extends Component {
         // This should be created a new every time or deep copied...
         const defaultState = {
             language: "mlt",
-            lecturer: "rav",
+            lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
             require_test: false,
             part: "0",
+            artifact_type: ARTIFACT_TYPES[0].value,
             manual_name: false,
             sources: [],
             tags: [],
@@ -69,8 +70,9 @@ class LessonForm extends Component {
 
         // validate content classification or preparation
         if (data.part !== "0" &&
+                data.artifact_type === "main" &&
             (data.sources.length === 0 && data.tags.length === 0)) {
-            this.setState({errors: { ...data.errors, noContent: true}});
+            this.setState({errors: {...data.errors, noContent: true}});
             return;
         }
 
@@ -105,6 +107,10 @@ class LessonForm extends Component {
 
     onPartChange(part) {
         this.setState({part, ...this.suggestName({part})});
+    }
+
+    onArtifactTypeChange(artifact_type) {
+        this.setState({artifact_type, ...this.suggestName({artifact_type})});
     }
 
     addSource(selection) {
@@ -154,7 +160,7 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags, capture_date, number, part} =
+        const {language, lecturer, has_translation, sources, tags, capture_date, number, part, artifact_type} =
             Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
@@ -193,6 +199,8 @@ class LessonForm extends Component {
         // override lesson preparation value
         if (pattern === "" && part === "0") {
             pattern = "achana";
+        } else if (pattern === "" && artifact_type !== ARTIFACT_TYPES[0].value) {
+            pattern = artifact_type;
         }
 
         const name = (has_translation ? "mlt" : language) +
@@ -250,7 +258,17 @@ class LessonForm extends Component {
             .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: "" + i})))
             .concat([{text: "מלא", value: "full"}]);
 
-        const {language, lecturer, has_translation, require_test, part, auto_name, manual_name, errors} = this.state;
+        const {
+            language,
+            lecturer,
+            has_translation,
+            require_test,
+            part,
+            artifact_type,
+            auto_name,
+            manual_name,
+            errors
+        } = this.state;
         const {availableSources, availableTags} = this.props;
 
         return <Grid stackable container divided="vertically">
@@ -285,29 +303,29 @@ class LessonForm extends Component {
                     {this.renderSelectedTags()}
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={4}>
-                <Grid.Column width={4}>
+            <Grid.Row columns={5}>
+                <Grid.Column width={3}>
                     <Header as="h5">שפה</Header>
                     <Dropdown selection fluid
                               options={LANGUAGES}
                               value={language}
                               onChange={(e, data) => this.onLanguageChange(data.value)}/>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={3}>
                     <Header as="h5">מרצה</Header>
                     <Dropdown selection fluid
                               options={LECTURERS}
                               value={lecturer}
                               onChange={(e, data) => this.onLecturerChange(data.value)}/>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={3}>
                     <Header as="h5">חלק</Header>
                     <Dropdown selection
                               options={parts}
                               value={part}
                               onChange={(e, data) => this.onPartChange(data.value)}/>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={3}>
                     <Checkbox label="מתורגם"
                               checked={has_translation}
                               onChange={(e, data) => this.onTranslationChange(data.checked)}/>
@@ -316,6 +334,16 @@ class LessonForm extends Component {
                     <Checkbox label="צריך בדיקה"
                               checked={require_test}
                               onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                    <span>
+                        סוג:
+                        &nbsp;&nbsp;
+                        <Dropdown inline
+                                  options={ARTIFACT_TYPES}
+                                  value={artifact_type}
+                                  onChange={(e, data) => this.onArtifactTypeChange(data.value)}/>
+                    </span>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>

@@ -24,8 +24,8 @@ class GenericContentForm extends Component {
     getInitialState(props) {
         // This should be created a new every time or deep copied...
         const defaultState = {
-            language: "heb",
-            lecturer: "rav",
+            language: LANGUAGES[0].value,
+            lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
             manual_name: false,
