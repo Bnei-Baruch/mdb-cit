@@ -60,8 +60,11 @@ class LessonForm extends Component {
 
         let state = Object.assign({}, defaultState, props.metadata);
         state = {...state, ...this.suggestName(state)};
-        state.sources = props.availableSources.length > 0 ? state.sources.map(x => findPath(props.availableSources, x)) : [];
-        state.tags = props.availableTags.length > 0 ? state.tags.map(x => findPath(props.availableTags, x)) : [];
+        state.sources = props.availableSources.length > 0 ?
+            state.sources.map(x => findPath(props.availableSources, x)) : [];
+        state.tags = props.availableTags.length > 0 ?
+            state.tags.map(x => findPath(props.availableTags, x)) : [];
+
         return state;
     }
 
@@ -202,6 +205,7 @@ class LessonForm extends Component {
         } else if (pattern === "" && artifact_type !== ARTIFACT_TYPES[0].value) {
             pattern = artifact_type;
         }
+        pattern = pattern.toLowerCase().trim();
 
         const name = (has_translation ? "mlt" : language) +
             "_o_" +

@@ -19,19 +19,19 @@ class App extends Component {
     render() {
         // const metadata = {};
         const metadata = {
-            // content_type: "LESSON_PART",
+            // collection_type: "CONGRESS",
+            // content_type: "MEAL",
             // content_type: "VIDEO_PROGRAM_CHAPTER",
             language: "heb",
             lecturer: "rav",
             has_translation: true,
-            require_test: true,
+            // require_test: true,
             // capture_date: "2017-04-11",
             collection_uid: "ukFliiGb",
             episode: "827",
             number: 2,
             // sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
             // tags: ["7vtV1gDJ", "K9q0p0nq"],
-            events: ["12345677", "12345676"],
         };
 
         return <Container>

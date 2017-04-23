@@ -2,26 +2,53 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
 import FileNamesWidget from "./FileNamesWidget";
 import {today, isActive} from "./utils";
-import {COLLECTION_TYPES, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";
+import {COLLECTION_TYPES, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";
 
 class TVShowForm extends Component {
 
     static propTypes = {
-        tvshows: PropTypes.array,
         metadata: PropTypes.object,
+        collections: PropTypes.object,
         onActivateShow: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
-        tvshows: [],
-        metadata: {}
+        metadata: {},
+        collections: new Map(),
     };
 
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.collections !== nextProps.collections) {
+
+            // which show should be selected after filter ?
+            let tv_show = this.state.tv_show;
+            let cuid;
+            if (this.state.active_tvshows.length > 0) {
+                // current selection
+                cuid = this.state.active_tvshows[tv_show].collection_uid;
+            } else {
+                // next props
+                cuid = nextProps.metadata.collection_uid;
+            }
+
+            // filter shows
+            const active_tvshows = this.getActiveShows(nextProps.collections);
+
+            // lookup show in filtered list
+            if (!!cuid) {
+                const idx = active_tvshows.findIndex(x => x.uid === cuid);
+                tv_show = idx > -1 ? idx : 0;
+            }
+
+            this.setState({active_tvshows, tv_show, auto_name: this.suggestName({active_tvshows, tv_show})});
+        }
     }
 
     getInitialState(props) {
@@ -37,40 +64,13 @@ class TVShowForm extends Component {
             active_tvshows: [],
         };
         const state = Object.assign({}, defaultState, props.metadata);
-        state.auto_name = this.suggestName(state);
-        state.active_tvshows = this.getActiveShows(props.tvshows);
+        state.active_tvshows = this.getActiveShows(props.collections);
         if (!!props.metadata.collection_uid) {
             const idx = state.active_tvshows.findIndex(x => x.uid === props.metadata.collection_uid);
             state.tv_show = idx > -1 ? idx : 0;
         }
+        state.auto_name = this.suggestName(state);
         return state;
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.tvshows !== nextProps.tvshows) {
-
-            // which show should be selected after filter ?
-            let tv_show = this.state.tv_show;
-            let cuid;
-            if (this.state.active_tvshows.length > 0) {
-                // current selection
-                cuid = this.state.active_tvshows[tv_show].collection_uid;
-            } else {
-                // next props
-                cuid = nextProps.metadata.collection_uid;
-            }
-
-            // filter shows
-            const active_tvshows = this.getActiveShows(nextProps.tvshows);
-
-            // lookup show in filtered list
-            if (!!cuid) {
-                const idx = active_tvshows.findIndex(x => x.uid === cuid);
-                tv_show = idx > -1 ? idx : 0;
-            }
-
-            this.setState({active_tvshows, tv_show, auto_name: this.suggestName({active_tvshows, tv_show})});
-        }
     }
 
     onSubmit(e) {
@@ -95,27 +95,27 @@ class TVShowForm extends Component {
         if (!!show.properties.default_language) {
             language = MDB_LANGUAGES[show.properties.default_language];
         }
-        this.setState({tv_show, language, auto_name: this.suggestName({tv_show, language})})
+        this.setState({tv_show, language, auto_name: this.suggestName({tv_show, language})});
     }
 
     onLanguageChange(language) {
-        this.setState({language, auto_name: this.suggestName({language})})
+        this.setState({language, auto_name: this.suggestName({language})});
     }
 
     onLecturerChange(lecturer) {
-        this.setState({lecturer, auto_name: this.suggestName({lecturer})})
+        this.setState({lecturer, auto_name: this.suggestName({lecturer})});
     }
 
     onTranslationChange(has_translation) {
-        this.setState({has_translation, auto_name: this.suggestName({has_translation})})
+        this.setState({has_translation, auto_name: this.suggestName({has_translation})});
     }
 
     onEpisodeChange(episode) {
-        this.setState({episode, auto_name: this.suggestName({episode})})
+        this.setState({episode, auto_name: this.suggestName({episode})});
     }
 
     onManualEdit(manual_name) {
-        this.setState({manual_name})
+        this.setState({manual_name});
     }
 
     suggestName(diff) {
@@ -136,19 +136,24 @@ class TVShowForm extends Component {
         return name.toLowerCase().trim();
     }
 
-    getActiveShows(tvshows) {
-        return tvshows.filter(x => isActive(x));
+    getTVShows(collections) {
+        return collections.get(CT_VIDEO_PROGRAM) || [];
+    }
+
+    getActiveShows(collections) {
+        return this.getTVShows(collections).filter(x => isActive(x));
     }
 
     renderManageDropdown() {
-        let options = this.props.tvshows.map((x, i) => {
+        const {collections, onActivateShow} = this.props;
+
+        let options = this.getTVShows(collections).map((x, i) => {
             const active = isActive(x),
                 action = active ?
                     <Button circular icon="remove" floated="right" size="mini" color="red" title="Disable"
-                            onClick={(e) => this.props.onActivateShow(e, x)}
-                    /> :
+                            onClick={(e) => onActivateShow(e, x)}/> :
                     <Button circular icon="checkmark" floated="right" size="mini" color="green" title="Enable"
-                            onClick={(e) => this.props.onActivateShow(e, x)}/>;
+                            onClick={(e) => onActivateShow(e, x)}/>;
             return {
                 content: <div>
                     {action}

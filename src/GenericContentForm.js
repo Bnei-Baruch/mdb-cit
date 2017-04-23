@@ -49,19 +49,19 @@ class GenericContentForm extends Component {
     }
 
     onLanguageChange(language) {
-        this.setState({language, auto_name: this.suggestName({language})})
+        this.setState({language, auto_name: this.suggestName({language})});
     }
 
     onLecturerChange(lecturer) {
-        this.setState({lecturer, auto_name: this.suggestName({lecturer})})
+        this.setState({lecturer, auto_name: this.suggestName({lecturer})});
     }
 
     onTranslationChange(has_translation) {
-        this.setState({has_translation, auto_name: this.suggestName({has_translation})})
+        this.setState({has_translation, auto_name: this.suggestName({has_translation})});
     }
 
     onManualEdit(manual_name) {
-        this.setState({manual_name})
+        this.setState({manual_name});
     }
 
     suggestName(diff) {

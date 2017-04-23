@@ -10,7 +10,8 @@ import {
     CT_MEAL,
     CT_VIDEO_PROGRAM_CHAPTER,
     CT_VIRTUAL_LESSON,
-    CT_WOMEN_LESSON_PART
+    CT_WOMEN_LESSON_PART,
+    CT_EVENT_PART
 } from "./consts";
 
 const ContentTypeForm = (props) => {
@@ -58,6 +59,16 @@ const ContentTypeForm = (props) => {
                         size="massive"
                         onClick={() => props.onSelect(CT_MEAL)}>
                     סעודה
+                </Button>
+            </Grid.Column>
+        </Grid.Row>
+        <Grid.Row columns={2}>
+            <Grid.Column>
+                <Button fluid
+                        color="yellow"
+                        size="massive"
+                        onClick={() => props.onSelect(CT_EVENT_PART)}>
+                    אירוע מיוחד
                 </Button>
             </Grid.Column>
         </Grid.Row>
