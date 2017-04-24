@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
-import FileNamesWidget from "./FileNamesWidget";
-import {isActive, today} from "./utils";
+import FileNamesWidget from "../components/FileNamesWidget";
+import {isActive, today} from "../shared/utils";
 import {
     CT_EVENT_PART,
     CT_FRIENDS_GATHERING,
@@ -10,7 +10,7 @@ import {
     EVENT_CONTENT_TYPES,
     LANGUAGES,
     LECTURERS
-} from "./consts";
+} from "../shared/consts";
 
 class EventPartForm extends Component {
 

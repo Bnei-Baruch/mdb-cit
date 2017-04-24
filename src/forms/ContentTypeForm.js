@@ -12,7 +12,7 @@ import {
     CT_VIRTUAL_LESSON,
     CT_WOMEN_LESSON_PART,
     CT_EVENT_PART
-} from "./consts";
+} from "../shared/consts";
 
 const ContentTypeForm = (props) => {
 

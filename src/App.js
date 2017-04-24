@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import {Container} from "semantic-ui-react";
 // import ModalWrapper from "./ModalWrapper";
 import CIT from "./CIT";
-import "./App.css";
 
 class App extends Component {
 

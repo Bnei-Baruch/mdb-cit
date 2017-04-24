@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header} from "semantic-ui-react";
-import FileNamesWidget from "./FileNamesWidget";
-import {today} from "./utils";
-import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
+import FileNamesWidget from "../components/FileNamesWidget";
+import {today} from "../shared/utils";
+import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class GenericContentForm extends Component {
 

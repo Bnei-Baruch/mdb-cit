@@ -1,11 +1,11 @@
 import React, {Component, PropTypes} from "react";
-import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./Store";
-import ContentTypeForm from "./ContentTypeForm";
-import LessonForm from "./LessonForm";
-import TVShowForm from "./TVShowForm";
-import EventPartForm from "./EventPartForm";
-import GenericContentForm from "./GenericContentForm";
-import {CT_EVENT_PART, CT_LESSON_PART, CT_VIDEO_PROGRAM_CHAPTER, EVENT_CONTENT_TYPES} from "./consts";
+import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./shared/Store";
+import ContentTypeForm from "./forms/ContentTypeForm";
+import LessonForm from "./forms/LessonForm";
+import TVShowForm from "./forms/TVShowForm";
+import EventPartForm from "./forms/EventPartForm";
+import GenericContentForm from "./forms/GenericContentForm";
+import {CT_EVENT_PART, CT_LESSON_PART, CT_VIDEO_PROGRAM_CHAPTER, EVENT_CONTENT_TYPES} from "./shared/consts";
 
 
 class CIT extends Component {

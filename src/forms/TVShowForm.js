@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
-import FileNamesWidget from "./FileNamesWidget";
-import {today, isActive} from "./utils";
-import {COLLECTION_TYPES, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "./consts";
+import FileNamesWidget from "../components/FileNamesWidget";
+import {today, isActive} from "../shared/utils";
+import {COLLECTION_TYPES, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "../shared/consts";
 
 class TVShowForm extends Component {
 

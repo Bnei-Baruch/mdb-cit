@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "semantic-ui-react";
-import TreeItemSelector from "./TreeItemSelector";
-import FileNamesWidget from "./FileNamesWidget";
-import {findPath, today} from "./utils";
-import {ARTIFACT_TYPES, COLLECTION_TYPES, LANGUAGES, LECTURERS} from "./consts";
+import TreeItemSelector from "../components/TreeItemSelector";
+import FileNamesWidget from "../components/FileNamesWidget";
+import {findPath, today} from "../shared/utils";
+import {ARTIFACT_TYPES, COLLECTION_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class LessonForm extends Component {
 
@@ -324,7 +324,7 @@ class LessonForm extends Component {
                 </Grid.Column>
                 <Grid.Column width={3}>
                     <Header as="h5">חלק</Header>
-                    <Dropdown selection
+                    <Dropdown selection fluid
                               options={parts}
                               value={part}
                               onChange={(e, data) => this.onPartChange(data.value)}/>
