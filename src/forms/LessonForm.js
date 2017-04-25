@@ -232,13 +232,10 @@ class LessonForm extends Component {
             {sources.map((x, i) => {
                 let title = x.map(y => y.name).join(" | ");
                 return <List.Item key={i}>
-                    {title}
-                    <Button size="mini"
-                            floated="right"
-                            color="grey"
-                            onClick={() => this.removeSource(i)}>
-                        הסר
-                    </Button>
+                    <Label>
+                        {title}
+                        <Icon name="delete" onClick={() => this.removeSource(i)}/>
+                    </Label>
                 </List.Item>
             })}
         </List>;
