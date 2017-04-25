@@ -2,8 +2,6 @@
 
 set -ex
 
-npm run build
-
 scp -r build/* archive@app.mdb.bbdomain.org:/sites/_tools/cit
 
 MAIN_JS="$(grep "\"main.js\":" build/asset-manifest.json | awk -F: '{print substr($2,3,length($2)-4)}')"
