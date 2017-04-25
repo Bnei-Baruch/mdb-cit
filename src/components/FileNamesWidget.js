@@ -15,6 +15,7 @@ const FileNamesWidget = (props) => {
                 <Table.Cell>
                     <Input fluid
                            size="small"
+                           value={manual_name}
                            focus={!!manual_name && manual_name !== auto_name}
                            onChange={onChange}/>
                 </Table.Cell>
