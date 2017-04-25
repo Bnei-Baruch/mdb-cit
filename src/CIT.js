@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./shared/Store";
+import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./shared/store";
 import ContentTypeForm from "./forms/ContentTypeForm";
 import LessonForm from "./forms/LessonForm";
 import TVShowForm from "./forms/TVShowForm";
