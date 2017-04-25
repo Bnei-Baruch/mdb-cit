@@ -111,6 +111,7 @@ class TVShowForm extends Component {
     }
 
     onEpisodeChange(episode) {
+        episode = episode.trim().split(/\s+/).join("_");  // clean user input
         this.setState({episode, auto_name: this.suggestName({episode})});
     }
 
@@ -130,8 +131,7 @@ class TVShowForm extends Component {
             capture_date +
             "_" +
             (show ? show.properties.pattern : "") +
-            "_n" +
-            episode;
+            (episode !== "" ? (Number.isNaN(Number.parseInt(episode, 10)) ? "_" : "_n") + episode : "");
 
         return name.toLowerCase().trim();
     }
