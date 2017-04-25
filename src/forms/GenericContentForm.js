@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header} from "semantic-ui-react";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {today} from "../shared/utils";
-import {COLLECTION_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
+import {CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class GenericContentForm extends Component {
 
@@ -39,7 +39,7 @@ class GenericContentForm extends Component {
         let data = {...this.state};
         data.pattern = data.content_type.toLowerCase();
         data.final_name = data.manual_name || data.auto_name;
-        data.collection_type = COLLECTION_TYPES[data.content_type];
+        data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
 
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
     }
@@ -74,7 +74,7 @@ class GenericContentForm extends Component {
             "_" +
             capture_date +
             "_" +
-            content_type +
+            CONTENT_TYPES_MAPPINGS[content_type].pattern +
             "_n" +
             (number || 1);
 

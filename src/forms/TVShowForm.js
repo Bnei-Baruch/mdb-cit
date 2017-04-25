@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {today, isActive} from "../shared/utils";
-import {COLLECTION_TYPES, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "../shared/consts";
+import {CONTENT_TYPES_MAPPINGS, CT_VIDEO_PROGRAM, LANGUAGES, LECTURERS, MDB_LANGUAGES} from "../shared/consts";
 
 class TVShowForm extends Component {
 
@@ -78,7 +78,7 @@ class TVShowForm extends Component {
         data.collection_uid = data.active_tvshows[data.tv_show].uid;
         data.pattern = data.active_tvshows[data.tv_show].properties.pattern;
         data.final_name = data.manual_name || data.auto_name;
-        data.collection_type = COLLECTION_TYPES[data.content_type];
+        data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
         delete data["tv_show"];
         delete data["active_tvshows"];
 
@@ -120,7 +120,7 @@ class TVShowForm extends Component {
     }
 
     suggestName(diff) {
-        const {tv_show, episode, language, lecturer, has_translation, active_tvshows, capture_date} =
+        const {content_type, tv_show, episode, language, lecturer, has_translation, active_tvshows, capture_date} =
             Object.assign({}, this.state, diff || {});
         const show = active_tvshows[tv_show];
 
@@ -129,6 +129,8 @@ class TVShowForm extends Component {
             lecturer +
             "_" +
             capture_date +
+            "_" +
+            CONTENT_TYPES_MAPPINGS[content_type].pattern +
             "_" +
             (show ? show.properties.pattern : "") +
             (episode !== "" ? (Number.isNaN(Number.parseInt(episode, 10)) ? "_" : "_n") + episode : "");

@@ -3,11 +3,8 @@ import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react
 import FileNamesWidget from "../components/FileNamesWidget";
 import {isActive, today} from "../shared/utils";
 import {
-    CT_EVENT_PART,
-    CT_FRIENDS_GATHERING,
-    CT_LESSON_PART,
-    CT_MEAL,
     EVENT_CONTENT_TYPES,
+    EVENT_PART_TYPES,
     LANGUAGES,
     LECTURERS
 } from "../shared/consts";
@@ -62,7 +59,7 @@ class EventPartForm extends Component {
         // This should be created a new every time or deep copied...
         const defaultState = {
             event: 0,
-            content_type: CT_LESSON_PART,
+            part_type: 0,
             number: "1",
             description: "",
             language: LANGUAGES[0].value,
@@ -87,10 +84,12 @@ class EventPartForm extends Component {
     onSubmit(e) {
         let data = {...this.state};
         let event = data.active_events[data.event];
+        data.content_type = EVENT_PART_TYPES[data.part_type].content_type;
         data.collection_uid = event.uid;
         data.collection_type = event.type;
         data.final_name = data.manual_name || data.auto_name;
         delete data["event"];
+        delete data["part_type"];
         delete data["active_events"];
 
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
@@ -104,11 +103,12 @@ class EventPartForm extends Component {
         this.setState({event, ...this.suggestName({event})});
     }
 
-    onContentTypeChange(content_type) {
-        this.setState({content_type, ...this.suggestName({content_type})});
+    onPartTypeChange(part_type) {
+        this.setState({part_type, ...this.suggestName({part_type})});
     }
 
     onNumberChange(number) {
+        number = number.trim().split(/\s+/).join("_");  // clean user input
         this.setState({number, ...this.suggestName({number})});
     }
 
@@ -135,7 +135,7 @@ class EventPartForm extends Component {
     suggestName(diff) {
         const {
             event,
-            content_type,
+            part_type,
             language,
             lecturer,
             has_translation,
@@ -154,9 +154,8 @@ class EventPartForm extends Component {
             "_" +
             pattern +
             "_" +
-            content_type +
-            "_n" +
-            (number || 1);
+            EVENT_PART_TYPES[part_type].pattern +
+            (number !== "" ? (Number.isNaN(Number.parseInt(number, 10)) ? "_" : "_n") + number : "");
 
         return {
             pattern,
@@ -173,7 +172,7 @@ class EventPartForm extends Component {
     render() {
         const {
                 event,
-                content_type,
+                part_type,
                 number,
                 description,
                 language,
@@ -184,13 +183,6 @@ class EventPartForm extends Component {
                 active_events
             } = this.state,
             eventOptions = active_events.map((x, i) => ({text: x.name, value: i}));
-
-        const ptOptions = [
-            {text: "שיעור", value: CT_LESSON_PART},
-            {text: "ישיבת חברים", value: CT_FRIENDS_GATHERING},
-            {text: "סעודה", value: CT_MEAL},
-            {text: "כללי", value: CT_EVENT_PART},
-        ];
 
         return <Grid stackable container divided="vertically">
             <Grid.Row columns={1}>
@@ -216,14 +208,14 @@ class EventPartForm extends Component {
                             <Grid.Column width={10}>
                                 <Header as="h5">משבצת תוכן</Header>
                                 <Dropdown selection fluid
-                                          options={ptOptions}
-                                          value={content_type}
-                                          onChange={(e, data) => this.onContentTypeChange(data.value)}/>
+                                          options={EVENT_PART_TYPES.map((x, i) => ({text: x.text, value: i}))}
+                                          value={part_type}
+                                          onChange={(e, data) => this.onPartTypeChange(data.value)}/>
                             </Grid.Column>
                             <Grid.Column width={6}>
                                 <Header as="h5">מספר</Header>
                                 <Input fluid
-                                       value={number}
+                                       defaultValue={number}
                                        onChange={(e, data) => this.onNumberChange(data.value)}/>
                             </Grid.Column>
                         </Grid.Row>

@@ -29,6 +29,7 @@ class App extends Component {
             collection_uid: "ukFliiGb",
             episode: "827",
             number: 2,
+            // manual_name: "some manual name",
             // sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
             // tags: ["7vtV1gDJ", "K9q0p0nq"],
         };

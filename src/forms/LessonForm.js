@@ -3,7 +3,7 @@ import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "seman
 import TreeItemSelector from "../components/TreeItemSelector";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {findPath, today} from "../shared/utils";
-import {ARTIFACT_TYPES, COLLECTION_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
+import {ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class LessonForm extends Component {
 
@@ -84,7 +84,7 @@ class LessonForm extends Component {
         data.sources = data.sources.map(x => x[x.length - 1].uid);
         data.tags = data.tags.map(x => x[x.length - 1].uid);
         data.final_name = data.manual_name || data.auto_name;
-        data.collection_type = COLLECTION_TYPES[data.content_type];
+        data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
     }
 
@@ -163,8 +163,8 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {language, lecturer, has_translation, sources, tags, capture_date, number, part, artifact_type} =
-            Object.assign({}, this.state, diff || {});
+        const {content_type, language, lecturer, has_translation, sources, tags, capture_date, number, part,
+            artifact_type} = Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
         let pattern = "";
@@ -213,11 +213,13 @@ class LessonForm extends Component {
             "_" +
             capture_date +
             "_" +
-            pattern +
-            "_lesson_n" +
+            CONTENT_TYPES_MAPPINGS[content_type].pattern +
+            "_n" +
             (number || 1) +
             "_" +
-            (part === "full" ? part : "p" + part);
+            (part === "full" ? part : "p" + part) +
+            "_" +
+            pattern;
 
         return {
             pattern,

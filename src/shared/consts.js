@@ -104,8 +104,9 @@ export const CT_VIDEO_PROGRAM_CHAPTER = "VIDEO_PROGRAM_CHAPTER";
 export const CT_EVENT_PART = "EVENT_PART";
 export const CT_FULL_LESSON = "FULL_LESSON";
 export const CT_TEXT = "TEXT";
-
 export const CT_UNKNOWN = "UNKNOWN";
+
+export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
 
 export const CONTENT_TYPE_BY_ID = {
     1: CT_DAILY_LESSON,
@@ -137,18 +138,30 @@ export const CONTENT_TYPE_BY_ID = {
     27: CT_UNKNOWN,
 };
 
-export const COLLECTION_TYPES = {
-    [CT_LESSON_PART]: CT_DAILY_LESSON,
-    [CT_FULL_LESSON]: CT_DAILY_LESSON,
-    [CT_VIDEO_PROGRAM_CHAPTER]: CT_VIDEO_PROGRAM,
-    [CT_FRIENDS_GATHERING]: CT_WEEKLY_FRIENDS_GATHERING,
-    [CT_MEAL]: CT_MEALS,
-    [CT_LECTURE]: CT_LECTURE_SERIES,
-    [CT_CHILDREN_LESSON_PART]: CT_LECTURE_SERIES,
-    [CT_WOMEN_LESSON_PART]: CT_LECTURE_SERIES,
-    [CT_CAMPUS_LESSON]: CT_LECTURE_SERIES,
-    [CT_LC_LESSON]: CT_LECTURE_SERIES,
-    [CT_VIRTUAL_LESSON]: CT_LECTURE_SERIES,
+export const CONTENT_TYPES_MAPPINGS = {
+    [CT_LESSON_PART]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
+    [CT_FULL_LESSON]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
+    [CT_VIDEO_PROGRAM_CHAPTER]: {collection_type: CT_VIDEO_PROGRAM, pattern: "program"},
+    [CT_FRIENDS_GATHERING]: {collection_type: CT_WEEKLY_FRIENDS_GATHERING, pattern: "yeshivat-haverim"},
+    [CT_MEAL]: {collection_type: CT_MEALS, pattern: "seuda"},
+    [CT_LECTURE]: {collection_type: CT_LECTURE_SERIES, pattern: "lecture"},
+    [CT_CHILDREN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "children-lesson"},
+    [CT_WOMEN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "women-lesson"},
+    [CT_CAMPUS_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "campus-lesson"},
+    [CT_LC_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "lc-lesson"},
+    [CT_VIRTUAL_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "virtual-lesson"},
 };
 
-export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
+export const EVENT_PART_TYPES = [
+    {text: "שיעור", content_type: CT_LESSON_PART, pattern: "lesson"},
+    {text: "ישיבת חברים", content_type: CT_FRIENDS_GATHERING, pattern: "yeshivat-haverim"},
+    {text: "סעודה", content_type: CT_MEAL, pattern: "seuda"},
+    {text: "טקס פתיחה", content_type: CT_EVENT_PART, pattern: "tekes-ptiha"},
+    {text: "טקס סיום", content_type: CT_EVENT_PART, pattern: "tekes-siyum"},
+    {text: "ערב פתוח", content_type: CT_EVENT_PART, pattern: "erev-patuah"},
+    {text: "ערב תרבות", content_type: CT_EVENT_PART, pattern: "erev-tarbut"},
+    {text: "הצגת פרויקט", content_type: CT_EVENT_PART, pattern: "atzagat-proekt"},
+    {text: "הענקת תעודות", content_type: CT_EVENT_PART, pattern: "haanakat-teudot"},
+    {text: "חתימת ספרים", content_type: CT_EVENT_PART, pattern: "hatimat-sfarim"},
+    {text: "אחר", content_type: CT_EVENT_PART, pattern: "event"},
+];
