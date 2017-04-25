@@ -61,7 +61,6 @@ class EventPartForm extends Component {
             event: 0,
             part_type: 0,
             number: "1",
-            description: "",
             language: LANGUAGES[0].value,
             lecturer: LECTURERS[0].value,
             has_translation: true,
@@ -110,10 +109,6 @@ class EventPartForm extends Component {
     onNumberChange(number) {
         number = number.trim().split(/\s+/).join("_");  // clean user input
         this.setState({number, ...this.suggestName({number})});
-    }
-
-    onDescriptionChange(description) {
-        this.setState({description, ...this.suggestName({description})});
     }
 
     onLanguageChange(language) {
@@ -174,7 +169,6 @@ class EventPartForm extends Component {
                 event,
                 part_type,
                 number,
-                description,
                 language,
                 lecturer,
                 has_translation,
@@ -217,14 +211,6 @@ class EventPartForm extends Component {
                                 <Input fluid
                                        defaultValue={number}
                                        onChange={(e, data) => this.onNumberChange(data.value)}/>
-                            </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row>
-                            <Grid.Column>
-                                <Header as="h5">תיאור</Header>
-                                <Input fluid
-                                       value={description}
-                                       onChange={(e, data) => this.onDescriptionChange(data.value)}/>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
