@@ -45,7 +45,7 @@ class LessonForm extends Component {
     getInitialState(props) {
         // This should be created a new every time or deep copied...
         const defaultState = {
-            language: "mlt",
+            language: "heb",
             lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
