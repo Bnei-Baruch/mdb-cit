@@ -88,7 +88,6 @@ class EventPartForm extends Component {
         data.collection_type = event.type;
         data.final_name = data.manual_name || data.auto_name;
         delete data["event"];
-        delete data["part_type"];
         delete data["active_events"];
 
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
