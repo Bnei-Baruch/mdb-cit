@@ -4,7 +4,7 @@ import {Input, Table} from "semantic-ui-react";
 const FileNamesWidget = (props) => {
     const {auto_name, manual_name, onChange} = props;
 
-    return <Table celled definition>
+    return <Table celled>
         <Table.Body>
             <Table.Row>
                 <Table.Cell collapsing>שם אוטומטי</Table.Cell>
@@ -12,9 +12,11 @@ const FileNamesWidget = (props) => {
             </Table.Row>
             <Table.Row>
                 <Table.Cell>שם ידני</Table.Cell>
-                <Table.Cell>
+                <Table.Cell style={{padding: "0 0.5rem"}}>
                     <Input fluid
                            size="small"
+                           placeholder="שנה שם אוטומטי"
+                           className="bb-manual-name-input"
                            value={!!manual_name ? manual_name : ""}
                            focus={!!manual_name && manual_name !== auto_name}
                            onChange={onChange}/>

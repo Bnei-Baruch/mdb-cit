@@ -84,13 +84,13 @@ class GenericContentForm extends Component {
     render() {
         const {language, lecturer, has_translation, auto_name, manual_name} = this.state;
 
-        return <Grid stackable container divided="vertically">
+        return <Grid stackable container>
             <Grid.Row columns={1}>
                 <Grid.Column>
-                    <Header as="h2">פרטי התוכן</Header>
+                    <Header as="h2" color="blue">פרטי התוכן</Header>
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={4}>
+            <Grid.Row columns={3} className="bb-interesting">
                 <Grid.Column width={4}>
                     <Header as="h5">שפה</Header>
                     <Dropdown selection fluid

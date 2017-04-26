@@ -177,13 +177,13 @@ class EventPartForm extends Component {
             } = this.state,
             eventOptions = active_events.map((x, i) => ({text: x.name, value: i}));
 
-        return <Grid stackable container divided="vertically">
+        return <Grid stackable container>
             <Grid.Row columns={1}>
                 <Grid.Column>
-                    <Header as="h2">פרטי האירוע</Header>
+                    <Header as="h2" color="blue">פרטי האירוע</Header>
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={3}>
+            <Grid.Row columns={3} className="bb-interesting">
                 <Grid.Column width={9}>
                     <Grid>
                         <Grid.Row>
@@ -214,9 +214,9 @@ class EventPartForm extends Component {
                         </Grid.Row>
                     </Grid>
                 </Grid.Column>
-                <Grid.Column width={1}>
+                <Grid.Column width={3}>
                 </Grid.Column>
-                <Grid.Column width={5}>
+                <Grid.Column width={4}>
                     <Grid>
                         <Grid.Row>
                             <Grid.Column>

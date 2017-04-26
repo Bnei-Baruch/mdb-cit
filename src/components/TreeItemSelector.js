@@ -88,7 +88,7 @@ class TreeItemSelector extends Component {
         let btn = (selection.length > 0) ?
             <Button size="mini"
                     floated="right"
-                    color="blue"
+                    color="teal"
                     onClick={() => this.onFinalSelection()}>
                 הוסף
             </Button>

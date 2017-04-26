@@ -7,6 +7,7 @@ import EventPartForm from "./forms/EventPartForm";
 import GenericContentForm from "./forms/GenericContentForm";
 import {CT_EVENT_PART, CT_LESSON_PART, CT_VIDEO_PROGRAM_CHAPTER, EVENT_CONTENT_TYPES} from "./shared/consts";
 
+import "./forms/forms.css";
 
 class CIT extends Component {
     static propTypes = {

@@ -73,7 +73,7 @@ class LessonForm extends Component {
 
         // validate content classification or preparation
         if (data.part !== "0" &&
-                data.artifact_type === "main" &&
+            data.artifact_type === "main" &&
             (data.sources.length === 0 && data.tags.length === 0)) {
             this.setState({errors: {...data.errors, noContent: true}});
             return;
@@ -163,8 +163,10 @@ class LessonForm extends Component {
     }
 
     suggestName(diff) {
-        const {content_type, language, lecturer, has_translation, sources, tags, capture_date, number, part,
-            artifact_type} = Object.assign({}, this.state, diff || {});
+        const {
+            content_type, language, lecturer, has_translation, sources, tags, capture_date, number, part,
+            artifact_type
+        } = Object.assign({}, this.state, diff || {});
 
         // pattern is the deepest node in the source chain with a pattern
         let pattern = "";
@@ -230,11 +232,19 @@ class LessonForm extends Component {
     renderSelectedSources() {
         const sources = this.state.sources;
 
-        return <List>
+        if (sources.length === 0) {
+            return <List className="bb-selected-sources-list">
+                <List.Item>
+                    <Header as="h5" color="red">לא נבחרו חומרי לימוד</Header>
+                </List.Item>
+            </List>;
+        }
+
+        return <List className="bb-selected-sources-list">
             {sources.map((x, i) => {
-                let title = x.map(y => y.name).join(" | ");
+                let title = x.map(y => y.name).join(", ");
                 return <List.Item key={i}>
-                    <Label>
+                    <Label basic color="blue" size="large">
                         {title}
                         <Icon name="delete" onClick={() => this.removeSource(i)}/>
                     </Label>
@@ -246,12 +256,20 @@ class LessonForm extends Component {
     renderSelectedTags() {
         const tags = this.state.tags;
 
-        return <div>
+        if (tags.length === 0) {
+            return <List className="bb-selected-sources-list">
+                <List.Item>
+                    <Header as="h5" color="red">לא נבחרו תגיות</Header>
+                </List.Item>
+            </List>;
+        }
+
+        return <div className="bb-selected-sources-list">
             {tags.map((x, i) => {
-                return <Label key={i}>
-                    {x[x.length - 1].label}
-                    <Icon name="delete" onClick={() => this.removeTag(i)}/>
-                </Label>
+                return <Label basic key={i} color="pink" size="large">
+                        {x[x.length - 1].label}
+                        <Icon name="delete" onClick={() => this.removeTag(i)}/>
+                    </Label>
             })}
         </div>;
     }
@@ -274,79 +292,96 @@ class LessonForm extends Component {
         } = this.state;
         const {availableSources, availableTags} = this.props;
 
-        return <Grid stackable container divided="vertically">
+        return <Grid stackable container>
             <Grid.Row columns={1}>
                 <Grid.Column>
-                    <Header as="h2">פרטי השיעור</Header>
+                    <Header as="h2" color="blue">פרטי השיעור</Header>
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={1}>
-                <Grid.Column>
-                    <Header as="h5">
-                        חומר לימוד
-                        {errors && errors.noContent ?
-                            <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
-                            : null}
-                    </Header>
-                    <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
-                    {this.renderSelectedSources()}
-                </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-                <Grid.Column>
-                    <Header as="h5">
-                        תגיות
-                        {errors && errors.noContent ?
-                            <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
-                            : null}
-                    </Header>
-                    <TreeItemSelector tree={availableTags}
-                                      fieldLabel={x => x.label}
-                                      onSelect={x => this.addTag(x)}/>
-                    {this.renderSelectedTags()}
-                </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={5}>
-                <Grid.Column width={3}>
-                    <Header as="h5">שפה</Header>
-                    <Dropdown selection fluid
-                              options={LANGUAGES}
-                              value={language}
-                              onChange={(e, data) => this.onLanguageChange(data.value)}/>
-                </Grid.Column>
-                <Grid.Column width={3}>
-                    <Header as="h5">מרצה</Header>
-                    <Dropdown selection fluid
-                              options={LECTURERS}
-                              value={lecturer}
-                              onChange={(e, data) => this.onLecturerChange(data.value)}/>
-                </Grid.Column>
-                <Grid.Column width={3}>
-                    <Header as="h5">חלק</Header>
-                    <Dropdown selection fluid
-                              options={parts}
-                              value={part}
-                              onChange={(e, data) => this.onPartChange(data.value)}/>
-                </Grid.Column>
-                <Grid.Column width={3}>
-                    <Checkbox label="מתורגם"
-                              checked={has_translation}
-                              onChange={(e, data) => this.onTranslationChange(data.checked)}/>
-                    <br/>
-                    <br/>
-                    <Checkbox label="צריך בדיקה"
-                              checked={require_test}
-                              onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
+            <Grid.Row columns={2} className="bb-interesting">
+                <Grid.Column width={12}>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">
+                                    חומר לימוד
+                                    {errors && errors.noContent ?
+                                        <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
+                                        : null}
+                                </Header>
+                                <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
+                                {this.renderSelectedSources()}
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">
+                                    תגיות
+                                    {errors && errors.noContent ?
+                                        <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
+                                        : null}
+                                </Header>
+                                <TreeItemSelector tree={availableTags}
+                                                  fieldLabel={x => x.label}
+                                                  onSelect={x => this.addTag(x)}/>
+                                {this.renderSelectedTags()}
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                    <span>
-                        סוג:
-                        &nbsp;&nbsp;
-                        <Dropdown inline
-                                  options={ARTIFACT_TYPES}
-                                  value={artifact_type}
-                                  onChange={(e, data) => this.onArtifactTypeChange(data.value)}/>
-                    </span>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">חלק</Header>
+                                <Dropdown selection
+                                          options={parts}
+                                          value={part}
+                                          onChange={(e, data) => this.onPartChange(data.value)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">סוג</Header>
+                                <Dropdown selection
+                                          options={ARTIFACT_TYPES}
+                                          value={artifact_type}
+                                          onChange={(e, data) => this.onArtifactTypeChange(data.value)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">שפה</Header>
+                                <Dropdown selection
+                                          options={LANGUAGES}
+                                          value={language}
+                                          onChange={(e, data) => this.onLanguageChange(data.value)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">מרצה</Header>
+                                <Dropdown selection
+                                          options={LECTURERS}
+                                          value={lecturer}
+                                          onChange={(e, data) => this.onLecturerChange(data.value)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Checkbox label="מתורגם"
+                                          checked={has_translation}
+                                          onChange={(e, data) => this.onTranslationChange(data.checked)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Checkbox label="צריך בדיקה"
+                                          checked={require_test}
+                                          onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
