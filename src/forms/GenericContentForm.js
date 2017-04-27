@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header} from "semantic-ui-react";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {today} from "../shared/utils";
-import {CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS} from "../shared/consts";
+import {CONTENT_TYPES_MAPPINGS, CT_FULL_LESSON, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class GenericContentForm extends Component {
 
@@ -76,7 +76,8 @@ class GenericContentForm extends Component {
             "_" +
             CONTENT_TYPES_MAPPINGS[content_type].pattern +
             "_n" +
-            (number || 1);
+            (number || 1) +
+            (content_type === CT_FULL_LESSON ? "_full" : "");
 
         return name.toLowerCase().trim();
     }
