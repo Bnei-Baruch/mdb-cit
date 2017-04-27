@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {Input, Table} from "semantic-ui-react";
+import {Icon, Input, Popup, Table} from "semantic-ui-react";
 
 const FileNamesWidget = (props) => {
     const {auto_name, manual_name, onChange} = props;
@@ -11,7 +11,15 @@ const FileNamesWidget = (props) => {
                 <Table.Cell>{auto_name}</Table.Cell>
             </Table.Row>
             <Table.Row>
-                <Table.Cell>שם ידני</Table.Cell>
+                <Table.Cell>
+                    שם ידני
+                    &nbsp;&nbsp;
+                    <Popup trigger={<Icon name="help circle outline" color="teal"/>}
+                           position="top right"
+                           style={{direction: "rtl", textAlign:"right"}}
+                           header="שם ידני"
+                           content="לשם הקובץ אין השפעה על המערכת, הוא ניתן אך ורק לצורכי תצוגה."/>
+                </Table.Cell>
                 <Table.Cell style={{padding: "0 0.5rem"}}>
                     <Input fluid
                            size="small"
