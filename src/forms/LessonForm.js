@@ -3,7 +3,7 @@ import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "seman
 import TreeItemSelector from "../components/TreeItemSelector";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {findPath, today} from "../shared/utils";
-import {ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS, CT_LESSON_PART} from "../shared/consts";
+import {ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class LessonForm extends Component {
 
@@ -31,14 +31,14 @@ class LessonForm extends Component {
             nextProps.metadata.sources &&
             this.props.availableSources !== nextProps.availableSources) {
             const sources = nextProps.metadata.sources.map(x => findPath(nextProps.availableSources, x));
-            this.setState({sources, ...this.suggestName({sources})});
+            this.setStateAndName({sources});
         }
 
         if (nextProps.availableTags.length > 0 &&
             nextProps.metadata.tags &&
             this.props.availableTags !== nextProps.availableTags) {
             const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
-            this.setState({tags, ...this.suggestName({tags})});
+            this.setStateAndName({tags});
         }
     }
 
@@ -55,11 +55,11 @@ class LessonForm extends Component {
             manual_name: false,
             sources: [],
             tags: [],
-            errors: {},
+            error: null,
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
-        state = {...state, ...this.suggestName(state)};
+        Object.assign(state, this.suggestName(state));
         state.sources = props.availableSources.length > 0 ?
             state.sources.map(x => findPath(props.availableSources, x)) : [];
         state.tags = props.availableTags.length > 0 ?
@@ -68,23 +68,22 @@ class LessonForm extends Component {
         return state;
     }
 
-    onSubmit(e) {
-        const data = {...this.state};
+    setStateAndName(diff) {
+        this.setState({...diff, ...this.suggestName(diff)});
+    }
 
-        // validate content classification or preparation
-        if (data.part !== 0 &&
-            data.artifact_type === "main" &&
-            (data.sources.length === 0 && data.tags.length === 0)) {
-            this.setState({errors: {...data.errors, noContent: true}});
+    onSubmit(e) {
+        if (!this.validate()) {
             return;
         }
 
-        // validations passed, return data to callback
-        delete data["errors"];
+        const data = {...this.state};
         data.sources = data.sources.map(x => x[x.length - 1].uid);
         data.tags = data.tags.map(x => x[x.length - 1].uid);
         data.final_name = data.manual_name || data.auto_name;
         data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
+        delete data["error"];
+
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
     }
 
@@ -93,15 +92,15 @@ class LessonForm extends Component {
     }
 
     onLanguageChange(language) {
-        this.setState({language, ...this.suggestName({language})});
+        this.setStateAndName({language});
     }
 
     onLecturerChange(lecturer) {
-        this.setState({lecturer, ...this.suggestName({lecturer})});
+        this.setStateAndName({lecturer});
     }
 
     onTranslationChange(has_translation) {
-        this.setState({has_translation, ...this.suggestName({has_translation})});
+        this.setStateAndName({has_translation});
     }
 
     onRequireTestChange(require_test) {
@@ -109,15 +108,25 @@ class LessonForm extends Component {
     }
 
     onPartChange(part) {
-        this.setState({part, ...this.suggestName({part})});
+        this.setStateAndName({
+            part,
+            error: (part === 0) ? null : this.state.error
+        });
     }
 
     onArtifactTypeChange(artifact_type) {
-        this.setState({artifact_type, ...this.suggestName({artifact_type})});
+        this.setStateAndName({
+            artifact_type,
+            error: (artifact_type !== "main") ? null : this.state.error
+        });
+    }
+
+    onManualEdit(manual_name) {
+        this.setState({manual_name})
     }
 
     addSource(selection) {
-        let {sources, errors} = this.state;
+        let {sources} = this.state;
 
         // Prevent duplicates
         for (let i = 0; i < sources.length; i++) {
@@ -127,18 +136,17 @@ class LessonForm extends Component {
         }
 
         sources.push(selection);
-        delete errors["noContent"];
-        this.setState({sources, errors, ...this.suggestName({sources})});
+        this.setStateAndName({sources, error: null});
     }
 
     removeSource(idx) {
         const sources = this.state.sources;
         sources.splice(idx, 1);
-        this.setState({sources, ...this.suggestName({sources})});
+        this.setStateAndName({sources});
     }
 
     addTag(selection) {
-        let {tags, errors} = this.state;
+        let {tags} = this.state;
 
         // Prevent duplicates
         for (let i = 0; i < tags.length; i++) {
@@ -148,18 +156,13 @@ class LessonForm extends Component {
         }
 
         tags.push(selection);
-        delete errors["noContent"];
-        this.setState({tags, errors, ...this.suggestName({tags})});
+        this.setStateAndName({tags, error: null});
     }
 
     removeTag(idx) {
         const tags = this.state.tags;
         tags.splice(idx, 1);
-        this.setState({tags, ...this.suggestName({tags})});
-    }
-
-    onManualEdit(manual_name) {
-        this.setState({manual_name})
+        this.setStateAndName({tags, ...this.suggestName({tags})});
     }
 
     suggestName(diff) {
@@ -219,12 +222,30 @@ class LessonForm extends Component {
             "_n" +
             (number || 1) +
             "_" +
-            (content_type === CT_LESSON_PART ? `p${part}_${pattern}` : "full");
+            "p" + part +
+            (pattern ? "_" + pattern : "");
 
         return {
             pattern,
             auto_name: name.toLowerCase().trim(),
         };
+    }
+
+    validate() {
+        if (this.isValidClassification()) {
+            return true;
+        }
+
+        this.setState({error: "נא לבחור חומרי לימוד או תגיות"});
+        return false;
+    }
+
+    isValidClassification() {
+        const {sources, tags, part, artifact_type} = this.state;
+        return sources.length !== 0 ||
+            tags.length !== 0 ||
+            part === 0 ||
+            artifact_type !== "main";
     }
 
     renderSelectedSources() {
@@ -233,7 +254,7 @@ class LessonForm extends Component {
         if (sources.length === 0) {
             return <List className="bb-selected-sources-list">
                 <List.Item>
-                    <Header as="h5" color="red">לא נבחרו חומרי לימוד</Header>
+                    <Header as="h5" color="grey">אין חומרי לימוד</Header>
                 </List.Item>
             </List>;
         }
@@ -257,7 +278,7 @@ class LessonForm extends Component {
         if (tags.length === 0) {
             return <List className="bb-selected-sources-list">
                 <List.Item>
-                    <Header as="h5" color="red">לא נבחרו תגיות</Header>
+                    <Header as="h5" color="grey">אין תגיות</Header>
                 </List.Item>
             </List>;
         }
@@ -265,9 +286,9 @@ class LessonForm extends Component {
         return <div className="bb-selected-sources-list">
             {tags.map((x, i) => {
                 return <Label basic key={i} color="pink" size="large">
-                        {x[x.length - 1].label}
-                        <Icon name="delete" onClick={() => this.removeTag(i)}/>
-                    </Label>
+                    {x[x.length - 1].label}
+                    <Icon name="delete" onClick={() => this.removeTag(i)}/>
+                </Label>
             })}
         </div>;
     }
@@ -277,7 +298,6 @@ class LessonForm extends Component {
             .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: i})));
 
         const {
-            content_type,
             language,
             lecturer,
             has_translation,
@@ -286,7 +306,7 @@ class LessonForm extends Component {
             artifact_type,
             auto_name,
             manual_name,
-            errors
+            error
         } = this.state;
         const {availableSources, availableTags} = this.props;
 
@@ -301,24 +321,14 @@ class LessonForm extends Component {
                     <Grid>
                         <Grid.Row>
                             <Grid.Column>
-                                <Header as="h5">
-                                    חומר לימוד
-                                    {errors && errors.noContent ?
-                                        <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
-                                        : null}
-                                </Header>
+                                <Header as="h5">חומר לימוד</Header>
                                 <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
                                 {this.renderSelectedSources()}
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
-                                <Header as="h5">
-                                    תגיות
-                                    {errors && errors.noContent ?
-                                        <Label basic color="red" pointing="left">נא לבחור חומר לימוד או תגיות</Label>
-                                        : null}
-                                </Header>
+                                <Header as="h5">תגיות</Header>
                                 <TreeItemSelector tree={availableTags}
                                                   fieldLabel={x => x.label}
                                                   onSelect={x => this.addTag(x)}/>
@@ -329,17 +339,15 @@ class LessonForm extends Component {
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Grid>
-                        {content_type === CT_LESSON_PART ?
-                            <Grid.Row>
-                                <Grid.Column>
-                                    <Header as="h5">חלק</Header>
-                                    <Dropdown selection
-                                              options={parts}
-                                              value={part}
-                                              onChange={(e, data) => this.onPartChange(data.value)}/>
-                                </Grid.Column>
-                            </Grid.Row> : null
-                        }
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">חלק</Header>
+                                <Dropdown selection
+                                          options={parts}
+                                          value={part}
+                                          onChange={(e, data) => this.onPartChange(data.value)}/>
+                            </Grid.Column>
+                        </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">סוג</Header>
@@ -393,8 +401,10 @@ class LessonForm extends Component {
             </Grid.Row>
             <Grid.Row columns={1} textAlign="right">
                 <Grid.Column>
+                    {error ? <Label basic color="red" size="large">{error}</Label> : null}
                     <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
-                    <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
+                    <Button primary
+                            onClick={(e) => this.onSubmit(e)}>שמור</Button>
                 </Grid.Column>
             </Grid.Row>
         </Grid>;
