@@ -5,7 +5,13 @@ import LessonForm from "./forms/LessonForm";
 import TVShowForm from "./forms/TVShowForm";
 import EventPartForm from "./forms/EventPartForm";
 import GenericContentForm from "./forms/GenericContentForm";
-import {CT_EVENT_PART, CT_LESSON_PART, CT_VIDEO_PROGRAM_CHAPTER, EVENT_CONTENT_TYPES} from "./shared/consts";
+import {
+    CT_EVENT_PART,
+    CT_FULL_LESSON,
+    CT_LESSON_PART,
+    CT_VIDEO_PROGRAM_CHAPTER,
+    EVENT_CONTENT_TYPES
+} from "./shared/consts";
 
 import "./forms/forms.css";
 
@@ -81,6 +87,7 @@ class CIT extends Component {
                                     collections={store.collections}/>;
             } else {
                 switch (content_type) {
+                    case CT_FULL_LESSON:
                     case CT_LESSON_PART:
                         el = <LessonForm metadata={{...metadata, content_type}}
                                          onSubmit={(e, x) => this.onFormSubmit(x)}

@@ -2,12 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {isActive, today} from "../shared/utils";
-import {
-    EVENT_CONTENT_TYPES,
-    EVENT_PART_TYPES,
-    LANGUAGES,
-    LECTURERS
-} from "../shared/consts";
+import {EVENT_CONTENT_TYPES, EVENT_PART_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
 
 class EventPartForm extends Component {
 
@@ -138,7 +133,14 @@ class EventPartForm extends Component {
             active_events
         } = Object.assign({}, this.state, diff || {});
 
-        let pattern = active_events.length !== 0 ? active_events[event].properties.pattern : "";
+        let pattern = "",
+            eventType = "";
+        if (active_events.length !== 0) {
+            const e = active_events[event];
+            pattern = e.properties.pattern;
+            eventType = e.type;
+        }
+        // let pattern = active_events.length !== 0 ? active_events[event].properties.pattern : "";
 
         const name = (has_translation ? "mlt" : language) +
             "_o_" +
@@ -146,10 +148,13 @@ class EventPartForm extends Component {
             "_" +
             capture_date +
             "_" +
-            pattern +
+            eventType +
             "_" +
             EVENT_PART_TYPES[part_type].pattern +
-            (number !== "" ? (Number.isNaN(Number.parseInt(number, 10)) ? "_" : "_n") + number : "");
+            (number !== "" ? (Number.isNaN(Number.parseInt(number, 10)) ? "_" : "_n") + number : "") +
+            "_" +
+            pattern
+        ;
 
         return {
             pattern,

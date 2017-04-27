@@ -3,7 +3,7 @@ import {Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List} from "seman
 import TreeItemSelector from "../components/TreeItemSelector";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {findPath, today} from "../shared/utils";
-import {ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS} from "../shared/consts";
+import {ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS, LANGUAGES, LECTURERS, CT_LESSON_PART} from "../shared/consts";
 
 class LessonForm extends Component {
 
@@ -50,7 +50,7 @@ class LessonForm extends Component {
             has_translation: true,
             capture_date: today(),
             require_test: false,
-            part: "0",
+            part: 1,
             artifact_type: ARTIFACT_TYPES[0].value,
             manual_name: false,
             sources: [],
@@ -72,7 +72,7 @@ class LessonForm extends Component {
         const data = {...this.state};
 
         // validate content classification or preparation
-        if (data.part !== "0" &&
+        if (data.part !== 0 &&
             data.artifact_type === "main" &&
             (data.sources.length === 0 && data.tags.length === 0)) {
             this.setState({errors: {...data.errors, noContent: true}});
@@ -202,7 +202,7 @@ class LessonForm extends Component {
         }
 
         // override lesson preparation value
-        if (pattern === "" && part === "0") {
+        if (pattern === "" && part === 0) {
             pattern = "achana";
         } else if (pattern === "" && artifact_type !== ARTIFACT_TYPES[0].value) {
             pattern = artifact_type;
@@ -219,9 +219,7 @@ class LessonForm extends Component {
             "_n" +
             (number || 1) +
             "_" +
-            (part === "full" ? part : "p" + part) +
-            "_" +
-            pattern;
+            (content_type === CT_LESSON_PART ? `p${part}_${pattern}` : "full");
 
         return {
             pattern,
@@ -275,11 +273,11 @@ class LessonForm extends Component {
     }
 
     render() {
-        const parts = [{text: "הכנה", value: "0"}]
-            .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: "" + i})))
-            .concat([{text: "מלא", value: "full"}]);
+        const parts = [{text: "הכנה", value: 0}]
+            .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({text: "חלק " + i, value: i})));
 
         const {
+            content_type,
             language,
             lecturer,
             has_translation,
@@ -331,15 +329,17 @@ class LessonForm extends Component {
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Grid>
-                        <Grid.Row>
-                            <Grid.Column>
-                                <Header as="h5">חלק</Header>
-                                <Dropdown selection
-                                          options={parts}
-                                          value={part}
-                                          onChange={(e, data) => this.onPartChange(data.value)}/>
-                            </Grid.Column>
-                        </Grid.Row>
+                        {content_type === CT_LESSON_PART ?
+                            <Grid.Row>
+                                <Grid.Column>
+                                    <Header as="h5">חלק</Header>
+                                    <Dropdown selection
+                                              options={parts}
+                                              value={part}
+                                              onChange={(e, data) => this.onPartChange(data.value)}/>
+                                </Grid.Column>
+                            </Grid.Row> : null
+                        }
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">סוג</Header>

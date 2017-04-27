@@ -7,7 +7,7 @@ export const LANGUAGES = [
     {text: "איטלקית", value: "ita"},
     {text: "גרמנית", value: "ger"},
     {text: "הולנדית", value: "dut"},
-    {text: "צרפתית", value: "FRE"},
+    {text: "צרפתית", value: "fre"},
     {text: "פורטוגזית", value: "por"},
     {text: "טורקית", value: "trk"},
     {text: "פולנית", value: "pol"},
@@ -153,7 +153,7 @@ export const CONTENT_TYPES_MAPPINGS = {
 };
 
 export const EVENT_PART_TYPES = [
-    {text: "שיעור", content_type: CT_LESSON_PART, pattern: "lesson"},
+    {text: "שיעור", content_type: CT_FULL_LESSON, pattern: "lesson"},
     {text: "ישיבת חברים", content_type: CT_FRIENDS_GATHERING, pattern: "yeshivat-haverim"},
     {text: "סעודה", content_type: CT_MEAL, pattern: "seuda"},
     {text: "טקס פתיחה", content_type: CT_EVENT_PART, pattern: "tekes-ptiha"},
