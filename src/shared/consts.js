@@ -81,7 +81,7 @@ export const ARTIFACT_TYPES = [
 // Collection Types
 export const CT_DAILY_LESSON = "DAILY_LESSON";
 export const CT_SATURDAY_LESSON = "SATURDAY_LESSON";
-export const CT_WEEKLY_FRIENDS_GATHERING = "WEEKLY_FRIENDS_GATHERING";
+export const CT_FRIENDS_GATHERINGS = "FRIENDS_GATHERINGS";
 export const CT_CONGRESS = "CONGRESS";
 export const CT_VIDEO_PROGRAM = "VIDEO_PROGRAM";
 export const CT_LECTURE_SERIES = "LECTURE_SERIES";
@@ -95,23 +95,24 @@ export const CT_LESSON_PART = "LESSON_PART";
 export const CT_LECTURE = "LECTURE";
 export const CT_CHILDREN_LESSON_PART = "CHILDREN_LESSON_PART";
 export const CT_WOMEN_LESSON_PART = "WOMEN_LESSON_PART";
-export const CT_CAMPUS_LESSON = "CAMPUS_LESSON";
 export const CT_LC_LESSON = "LC_LESSON";
-export const CT_VIRTUAL_LESSON = "VIRTUAL_LESSON";
 export const CT_FRIENDS_GATHERING = "FRIENDS_GATHERING";
 export const CT_MEAL = "MEAL";
 export const CT_VIDEO_PROGRAM_CHAPTER = "VIDEO_PROGRAM_CHAPTER";
-export const CT_EVENT_PART = "EVENT_PART";
 export const CT_FULL_LESSON = "FULL_LESSON";
 export const CT_TEXT = "TEXT";
 export const CT_UNKNOWN = "UNKNOWN";
+export const CT_EVENT_PART = "EVENT_PART";
+export const CT_CLIP = "CLIP";
+export const CT_TRAINING = "TRAINING";
+export const CT_KITEI_MAKOR = "KITEI_MAKOR";
 
 export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
 
 export const CONTENT_TYPE_BY_ID = {
     1: CT_DAILY_LESSON,
     2: CT_SATURDAY_LESSON,
-    3: CT_WEEKLY_FRIENDS_GATHERING,
+    3: CT_FRIENDS_GATHERINGS,
     4: CT_CONGRESS,
     5: CT_VIDEO_PROGRAM,
     6: CT_LECTURE_SERIES,
@@ -123,33 +124,30 @@ export const CONTENT_TYPE_BY_ID = {
     12: CT_LECTURE,
     13: CT_CHILDREN_LESSON_PART,
     14: CT_WOMEN_LESSON_PART,
-    15: CT_CAMPUS_LESSON,
     16: CT_LC_LESSON,
-    17: CT_VIRTUAL_LESSON,
     18: CT_FRIENDS_GATHERING,
     19: CT_MEAL,
     20: CT_VIDEO_PROGRAM_CHAPTER,
     21: CT_FULL_LESSON,
     22: CT_TEXT,
-    23: CT_SATURDAY_LESSON,
-    24: CT_WEEKLY_FRIENDS_GATHERING,
-    25: CT_PICNIC,
-    26: CT_FRIENDS_GATHERING,
     27: CT_UNKNOWN,
+    28: CT_EVENT_PART,
+    29: CT_CLIP,
+    30: CT_TRAINING,
+    31: CT_KITEI_MAKOR,
 };
 
 export const CONTENT_TYPES_MAPPINGS = {
     [CT_LESSON_PART]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
     [CT_FULL_LESSON]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
     [CT_VIDEO_PROGRAM_CHAPTER]: {collection_type: CT_VIDEO_PROGRAM, pattern: "program"},
-    [CT_FRIENDS_GATHERING]: {collection_type: CT_WEEKLY_FRIENDS_GATHERING, pattern: "yeshivat-haverim"},
+    [CT_FRIENDS_GATHERING]: {collection_type: CT_FRIENDS_GATHERINGS, pattern: "yeshivat-haverim"},
     [CT_MEAL]: {collection_type: CT_MEALS, pattern: "seuda"},
     [CT_LECTURE]: {collection_type: CT_LECTURE_SERIES, pattern: "lecture"},
+    [CT_TRAINING]: {collection_type: CT_LECTURE_SERIES, pattern: "training"},
     [CT_CHILDREN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "children-lesson"},
     [CT_WOMEN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "women-lesson"},
-    [CT_CAMPUS_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "campus-lesson"},
     [CT_LC_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "lc-lesson"},
-    [CT_VIRTUAL_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "virtual-lesson"},
 };
 
 export const EVENT_PART_TYPES = [

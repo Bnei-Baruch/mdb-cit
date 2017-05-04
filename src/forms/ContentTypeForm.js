@@ -1,15 +1,14 @@
 import React, {PropTypes} from "react";
 import {Button, Dropdown, Grid} from "semantic-ui-react";
 import {
-    CT_CAMPUS_LESSON,
     CT_CHILDREN_LESSON_PART,
     CT_FRIENDS_GATHERING,
     CT_LC_LESSON,
     CT_LECTURE,
+    CT_TRAINING,
     CT_LESSON_PART,
     CT_MEAL,
     CT_VIDEO_PROGRAM_CHAPTER,
-    CT_VIRTUAL_LESSON,
     CT_WOMEN_LESSON_PART,
     CT_EVENT_PART
 } from "../shared/consts";
@@ -18,9 +17,8 @@ const ContentTypeForm = (props) => {
 
     const otherOptions = [
         {text: "הרצאה", value: CT_LECTURE},
-        {text: "שיעור קמפוס", value: CT_CAMPUS_LESSON},
+        {text: "הכשרה", value: CT_TRAINING},
         {text: "שיעור לרנינג סנטר", value: CT_LC_LESSON},
-        {text: "שיעור וירטואלי", value: CT_VIRTUAL_LESSON},
         {text: "שיעור נשים", value: CT_WOMEN_LESSON_PART},
         {text: "שיעור ילדים", value: CT_CHILDREN_LESSON_PART},
     ];
