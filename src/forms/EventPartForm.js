@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {Button, Checkbox, Dropdown, Grid, Header, Input} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Grid, Header, Input, Label} from "semantic-ui-react";
 import FileNamesWidget from "../components/FileNamesWidget";
 import {isActive, today} from "../shared/utils";
 import {EVENT_CONTENT_TYPES, EVENT_PART_TYPES, LANGUAGES, LECTURERS} from "../shared/consts";
@@ -55,13 +55,14 @@ class EventPartForm extends Component {
         const defaultState = {
             event: 0,
             part_type: 0,
-            number: "1",
+            number: 1,
             language: LANGUAGES[0].value,
             lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
             manual_name: false,
             active_events: [],
+            error: null,
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
@@ -76,6 +77,10 @@ class EventPartForm extends Component {
     }
 
     onSubmit(e) {
+        if (!!this.state.error) {
+            return;
+        }
+
         let data = {...this.state};
         let event = data.active_events[data.event];
         data.content_type = EVENT_PART_TYPES[data.part_type].content_type;
@@ -84,6 +89,7 @@ class EventPartForm extends Component {
         data.final_name = data.manual_name || data.auto_name;
         delete data["event"];
         delete data["active_events"];
+        delete data["error"];
 
         this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
     }
@@ -100,9 +106,17 @@ class EventPartForm extends Component {
         this.setState({part_type, ...this.suggestName({part_type})});
     }
 
-    onNumberChange(number) {
-        number = number.trim().split(/\s+/).join("_");  // clean user input
-        this.setState({number, ...this.suggestName({number})});
+    onNumberChange(value) {
+        let number = Number.parseInt(value, 10);
+        if (Number.isNaN(number)) {
+            this.setState({
+                error: "שדה מספר לא יכול להכיל אותיות",
+                number: 1,
+                ...this.suggestName({number})
+            });
+        } else {
+            this.setState({number, error: null, ...this.suggestName({number})});
+        }
     }
 
     onLanguageChange(language) {
@@ -151,7 +165,8 @@ class EventPartForm extends Component {
             eventType +
             "_" +
             EVENT_PART_TYPES[part_type].pattern +
-            (number !== "" ? (Number.isNaN(Number.parseInt(number, 10)) ? "_" : "_n") + number : "") +
+            "_n" +
+            (number || 1) +
             "_" +
             pattern
         ;
@@ -178,7 +193,8 @@ class EventPartForm extends Component {
                 has_translation,
                 auto_name,
                 manual_name,
-                active_events
+                active_events,
+                error
             } = this.state,
             eventOptions = active_events.map((x, i) => ({text: x.name, value: i}));
 
@@ -260,6 +276,7 @@ class EventPartForm extends Component {
             </Grid.Row>
             <Grid.Row columns={1} textAlign="right">
                 <Grid.Column>
+                    {error ? <Label basic color="red" size="large">{error}</Label> : null}
                     <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
                     <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
                 </Grid.Column>
