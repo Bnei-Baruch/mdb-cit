@@ -60,10 +60,11 @@ class TVShowForm extends Component {
             capture_date: today(),
             tv_show: 0,
             episode: "1",
-            manual_name: false,
+            manual_name: null,
             active_tvshows: [],
         };
         const state = Object.assign({}, defaultState, props.metadata);
+        state.manual_name = state.manual_name || null;
         state.active_tvshows = this.getActiveShows(props.collections);
         if (!!props.metadata.collection_uid) {
             const idx = state.active_tvshows.findIndex(x => x.uid === props.metadata.collection_uid);

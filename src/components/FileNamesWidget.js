@@ -25,8 +25,8 @@ const FileNamesWidget = (props) => {
                            size="small"
                            placeholder="שנה שם אוטומטי"
                            className="bb-manual-name-input"
-                           value={!!manual_name ? manual_name : ""}
-                           focus={!!manual_name && manual_name !== auto_name}
+                           value={manual_name ? manual_name : ""}
+                           focus={manual_name && manual_name !== auto_name}
                            onChange={onChange}/>
                 </Table.Cell>
             </Table.Row>
@@ -41,7 +41,7 @@ const FileNamesWidget = (props) => {
 FileNamesWidget.propTypes = {
     onChange: PropTypes.func.isRequired,
     auto_name: PropTypes.string,
-    manual_name: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    manual_name: PropTypes.string,
 };
 
 export default FileNamesWidget;

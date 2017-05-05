@@ -60,12 +60,13 @@ class EventPartForm extends Component {
             lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
-            manual_name: false,
+            manual_name: null,
             active_events: [],
             error: null,
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
+        state.manual_name = state.manual_name || null;
         state.active_events = this.getActiveEvents(props.collections);
         if (!!props.metadata.collection_uid) {
             const idx = state.active_events.findIndex(x => x.uid === props.metadata.collection_uid);

@@ -52,13 +52,14 @@ class LessonForm extends Component {
             require_test: false,
             part: 1,
             artifact_type: ARTIFACT_TYPES[0].value,
-            manual_name: false,
+            manual_name: null,
             sources: [],
             tags: [],
             error: null,
         };
 
         let state = Object.assign({}, defaultState, props.metadata);
+        state.manual_name = state.manual_name || null;
         Object.assign(state, this.suggestName(state));
         state.sources = props.availableSources.length > 0 ?
             state.sources.map(x => findPath(props.availableSources, x)) : [];

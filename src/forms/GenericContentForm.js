@@ -28,9 +28,10 @@ class GenericContentForm extends Component {
             lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
-            manual_name: false,
+            manual_name: null,
         };
         const state = Object.assign({}, defaultState, props.metadata);
+        state.manual_name = state.manual_name || null;
         state.auto_name = this.suggestName(state);
         return state;
     }
