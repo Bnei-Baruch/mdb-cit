@@ -166,10 +166,10 @@ class EventPartForm extends Component {
             eventType +
             "_" +
             EVENT_PART_TYPES[part_type].pattern +
-            "_n" +
-            (number || 1) +
             "_" +
-            pattern
+            pattern +
+            "_n" +
+            (number || 1)
         ;
 
         return {

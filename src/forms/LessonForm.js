@@ -220,11 +220,11 @@ class LessonForm extends Component {
             capture_date +
             "_" +
             CONTENT_TYPES_MAPPINGS[content_type].pattern +
+            (pattern ? "_" + pattern : "") +
             "_n" +
             (number || 1) +
             "_" +
-            "p" + part +
-            (pattern ? "_" + pattern : "");
+            "p" + part;
 
         return {
             pattern,
