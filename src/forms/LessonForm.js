@@ -169,34 +169,26 @@ class LessonForm extends Component {
             artifact_type
         } = Object.assign({}, this.state, diff || {});
 
-        // pattern is the deepest node in the source chain with a pattern
+        // pattern is the deepest node in the chain with a pattern
         let pattern = "";
-        for (let i = 0; i < sources.length; i++) {
+        for (let i = 0; pattern === "" && i < tags.length; i++) {
+            const tag = tags[i];
+            for (let j = tag.length - 1; j >= 0; j--) {
+                const t = tag[j];
+                if (!!t.pattern) {
+                    pattern = t.pattern;
+                    break;
+                }
+            }
+        }
+
+        // if no tag was selected take pattern from sources, same logic as above
+        for (let i = 0; pattern === "" && i < sources.length; i++) {
             const source = sources[i];
             for (let j = source.length - 1; j >= 0; j--) {
                 const s = source[j];
                 if (!!s.pattern) {
                     pattern = s.pattern;
-                    break;
-                }
-            }
-            if (pattern !== "") {
-                break;
-            }
-        }
-
-        // if no source take pattern from tags, same logic as above
-        if (pattern === "") {
-            for (let i = 0; i < tags.length; i++) {
-                const tag = tags[i];
-                for (let j = tag.length - 1; j >= 0; j--) {
-                    const t = tag[j];
-                    if (!!t.pattern) {
-                        pattern = t.pattern;
-                        break;
-                    }
-                }
-                if (pattern !== "") {
                     break;
                 }
             }
