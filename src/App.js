@@ -23,7 +23,7 @@ class App extends Component {
             // content_type: "LESSON_PART",
             // content_type: "EVENT_PART",
             // content_type: "MEAL",
-            content_type: "VIDEO_PROGRAM_CHAPTER",
+            // content_type: "VIDEO_PROGRAM_CHAPTER",
             language: "heb",
             lecturer: "rav",
             has_translation: true,
