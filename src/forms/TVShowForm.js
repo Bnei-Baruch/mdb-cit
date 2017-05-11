@@ -29,6 +29,7 @@ class TVShowForm extends Component {
 
             // which show should be selected after filter ?
             let tv_show = this.state.tv_show;
+            let language = this.state.language;
             let cuid;
             if (this.state.active_tvshows.length > 0) {
                 // current selection
@@ -47,7 +48,16 @@ class TVShowForm extends Component {
                 tv_show = idx > -1 ? idx : 0;
             }
 
-            this.setState({active_tvshows, tv_show, auto_name: this.suggestName({active_tvshows, tv_show})});
+            // adjust show's default language
+            if (active_tvshows.length > tv_show) {
+                const defaultLang = active_tvshows[tv_show].properties.default_language;
+                if (!!defaultLang) {
+                    language = MDB_LANGUAGES[defaultLang];
+                }
+            }
+
+            this.setState({active_tvshows, tv_show, language,
+                auto_name: this.suggestName({active_tvshows, tv_show, language})});
         }
     }
 
@@ -65,11 +75,22 @@ class TVShowForm extends Component {
         };
         const state = Object.assign({}, defaultState, props.metadata);
         state.manual_name = state.manual_name || null;
+
+        // filter shows and lookup specified show
         state.active_tvshows = this.getActiveShows(props.collections);
         if (!!props.metadata.collection_uid) {
             const idx = state.active_tvshows.findIndex(x => x.uid === props.metadata.collection_uid);
             state.tv_show = idx > -1 ? idx : 0;
         }
+
+        // adjust show's default language
+        if (state.active_tvshows.length > state.tv_show) {
+            const defaultLang = state.active_tvshows[state.tv_show].properties.default_language;
+            if (!!defaultLang) {
+                state.language = MDB_LANGUAGES[defaultLang];
+            }
+        }
+
         state.auto_name = this.suggestName(state);
         return state;
     }
