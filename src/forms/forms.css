@@ -18,6 +18,8 @@
 
 .bb-manual-name-input input {
     border: none !important;
+    font-size: 14px !important;
+    padding: .8em !important;
 }
 
 .bb-selected-sources-list,

@@ -8,7 +8,7 @@ const FileNamesWidget = (props) => {
         <Table.Body>
             <Table.Row>
                 <Table.Cell collapsing>שם אוטומטי</Table.Cell>
-                <Table.Cell>{auto_name}</Table.Cell>
+                <Table.Cell style={{direction: "ltr"}}>{auto_name}</Table.Cell>
             </Table.Row>
             <Table.Row>
                 <Table.Cell>
@@ -20,7 +20,7 @@ const FileNamesWidget = (props) => {
                            header="שם ידני"
                            content="לשם הקובץ אין השפעה על המערכת, הוא ניתן אך ורק לצורכי תצוגה."/>
                 </Table.Cell>
-                <Table.Cell style={{padding: "0 0.5rem"}}>
+                <Table.Cell style={{padding: "0", direction: "ltr"}}>
                     <Input fluid
                            size="small"
                            placeholder="שנה שם אוטומטי"
@@ -32,7 +32,7 @@ const FileNamesWidget = (props) => {
             </Table.Row>
             <Table.Row>
                 <Table.Cell>שם סופי</Table.Cell>
-                <Table.Cell>{manual_name || auto_name}</Table.Cell>
+                <Table.Cell style={{direction: "ltr"}}>{manual_name || auto_name}</Table.Cell>
             </Table.Row>
         </Table.Body>
     </Table>;
