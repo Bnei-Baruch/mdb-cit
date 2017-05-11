@@ -13,6 +13,7 @@ class LessonForm extends Component {
         metadata: PropTypes.object,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
+        onClear: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
@@ -388,6 +389,11 @@ class LessonForm extends Component {
             </Grid.Row>
             <Grid.Row columns={1} textAlign="right">
                 <Grid.Column>
+                    <Button content="אפס בחירה"
+                            color="orange"
+                            icon="trash outline"
+                            floated="left"
+                            onClick={(e) => this.props.onClear(e)}/>
                     {error ? <Label basic color="red" size="large">{error}</Label> : null}
                     <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
                     <Button primary

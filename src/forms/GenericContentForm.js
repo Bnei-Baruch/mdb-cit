@@ -10,6 +10,7 @@ class GenericContentForm extends Component {
         metadata: PropTypes.object,
         onSubmit: PropTypes.func.isRequired,
         onCancel: PropTypes.func.isRequired,
+        onClear: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
@@ -122,6 +123,11 @@ class GenericContentForm extends Component {
             </Grid.Row>
             <Grid.Row columns={1} textAlign="right">
                 <Grid.Column>
+                    <Button content="אפס בחירה"
+                            color="orange"
+                            icon="trash outline"
+                            floated="left"
+                            onClick={(e) => this.props.onClear(e)}/>
                     <Button onClick={(e) => this.onCancel(e)}>בטל</Button>
                     <Button primary onClick={(e) => this.onSubmit(e)}>שמור</Button>
                 </Grid.Column>

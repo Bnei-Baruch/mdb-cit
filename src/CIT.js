@@ -8,6 +8,7 @@ import GenericContentForm from "./forms/GenericContentForm";
 import {
     CT_EVENT_PART,
     CT_LESSON_PART,
+    CT_UNKNOWN,
     CT_VIDEO_PROGRAM_CHAPTER,
     EVENT_CONTENT_TYPES
 } from "./shared/consts";
@@ -30,7 +31,7 @@ class CIT extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            content_type: props.metadata.content_type,
+            metadata: {...props.metadata},
             store: {
                 sources: [],
                 tags: [],
@@ -46,7 +47,7 @@ class CIT extends Component {
     }
 
     onCTSelected(content_type) {
-        this.setState({content_type});
+        this.setState({metadata: {...this.state.metadata, content_type}});
     };
 
     onFormSubmit(metadata) {
@@ -61,8 +62,24 @@ class CIT extends Component {
         if (this.props.onCancel) {
             this.props.onCancel(e);
         } else {
-            this.setState({content_type: null});
+            this.onCTSelected(null);
         }
+    }
+
+    onClear(e) {
+        // make a fresh copy of input metadata
+        const metadata = {...this.props.metadata};
+
+        // set content_type to UNKNOWN
+        metadata.content_type = CT_UNKNOWN;
+
+        // delete all fields coming from us (leave what's given from external embedder, i.e. workflow)
+        for (const f of ["manual_name", "collection_uid", "collection_type", "sources", "tags", "artifact_type",
+            "number", "part", "part_type", "episode", "pattern",]) {
+            delete metadata[f];
+        }
+
+        this.setState({metadata});
     }
 
     onActivateShow(tvshow) {
@@ -72,47 +89,51 @@ class CIT extends Component {
     }
 
     render() {
-        const {store, content_type} = this.state;
-        const metadata = this.props.metadata;
+        const {store, metadata} = this.state;
 
         let el;
-        if (!!content_type) {
+        if (!!metadata.content_type && metadata.content_type !== CT_UNKNOWN) {
 
             // This is here to allow reloading compatibility with given metadata saved from EventForm
             if (EVENT_CONTENT_TYPES.includes(metadata.collection_type)) {
-                el = <EventPartForm metadata={{...metadata, content_type}}
+                el = <EventPartForm metadata={metadata}
                                     onSubmit={(e, x) => this.onFormSubmit(x)}
                                     onCancel={(e) => this.onFormCancel(e)}
+                                    onClear={(e) => this.onClear(e)}
                                     collections={store.collections}/>;
             } else {
-                switch (content_type) {
+                switch (metadata.content_type) {
                     case CT_LESSON_PART:
-                        el = <LessonForm metadata={{...metadata, content_type}}
+                        el = <LessonForm metadata={metadata}
                                          onSubmit={(e, x) => this.onFormSubmit(x)}
                                          onCancel={(e) => this.onFormCancel(e)}
+                                         onClear={(e) => this.onClear(e)}
                                          availableSources={store.sources}
                                          availableTags={store.tags}/>;
                         break;
 
                     case CT_VIDEO_PROGRAM_CHAPTER:
-                        el = <TVShowForm metadata={{...metadata, content_type}}
+                        el = <TVShowForm metadata={metadata}
                                          onSubmit={(e, x) => this.onFormSubmit(x)}
                                          onCancel={(e) => this.onFormCancel(e)}
+                                         onClear={(e) => this.onClear(e)}
                                          collections={store.collections}
                                          onActivateShow={(e, x) => this.onActivateShow(x)}/>;
                         break;
 
                     case CT_EVENT_PART:
-                        el = <EventPartForm metadata={{...metadata, content_type}}
+                        el = <EventPartForm metadata={metadata}
                                             onSubmit={(e, x) => this.onFormSubmit(x)}
                                             onCancel={(e) => this.onFormCancel(e)}
+                                            onClear={(e) => this.onClear(e)}
                                             collections={store.collections}/>;
                         break;
 
                     default:
-                        el = <GenericContentForm metadata={{...metadata, content_type}}
+                        el = <GenericContentForm metadata={metadata}
                                                  onSubmit={(e, x) => this.onFormSubmit(x)}
-                                                 onCancel={(e) => this.onFormCancel(e)}/>;
+                                                 onCancel={(e) => this.onFormCancel(e)}
+                                                 onClear={(e) => this.onClear(e)}/>;
                         break;
                 }
             }
