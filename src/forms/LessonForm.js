@@ -309,18 +309,18 @@ class LessonForm extends Component {
                     <Grid>
                         <Grid.Row>
                             <Grid.Column>
-                                <Header as="h5">חומר לימוד</Header>
-                                <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
-                                {this.renderSelectedSources()}
-                            </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row>
-                            <Grid.Column>
                                 <Header as="h5">תגיות</Header>
                                 <TreeItemSelector tree={availableTags}
                                                   fieldLabel={x => x.label}
                                                   onSelect={x => this.addTag(x)}/>
                                 {this.renderSelectedTags()}
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Header as="h5">חומר לימוד</Header>
+                                <TreeItemSelector tree={availableSources} onSelect={x => this.addSource(x)}/>
+                                {this.renderSelectedSources()}
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -330,7 +330,7 @@ class LessonForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">חלק</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={parts}
                                           value={part}
                                           onChange={(e, data) => this.onPartChange(data.value)}/>
@@ -339,7 +339,7 @@ class LessonForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">סוג</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={ARTIFACT_TYPES}
                                           value={artifact_type}
                                           onChange={(e, data) => this.onArtifactTypeChange(data.value)}/>
@@ -348,7 +348,7 @@ class LessonForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">שפה</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={LANGUAGES}
                                           value={language}
                                           onChange={(e, data) => this.onLanguageChange(data.value)}/>
@@ -357,7 +357,7 @@ class LessonForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">מרצה</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={LECTURERS}
                                           value={lecturer}
                                           onChange={(e, data) => this.onLecturerChange(data.value)}/>

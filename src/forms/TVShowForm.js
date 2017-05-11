@@ -238,7 +238,7 @@ class TVShowForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">שפה</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={LANGUAGES}
                                           value={language}
                                           onChange={(e, data) => this.onLanguageChange(data.value)}/>
@@ -247,7 +247,7 @@ class TVShowForm extends Component {
                         <Grid.Row>
                             <Grid.Column>
                                 <Header as="h5">מרצה</Header>
-                                <Dropdown selection
+                                <Dropdown selection fluid
                                           options={LECTURERS}
                                           value={lecturer}
                                           onChange={(e, data) => this.onLecturerChange(data.value)}/>
