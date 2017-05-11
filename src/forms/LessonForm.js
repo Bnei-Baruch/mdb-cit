@@ -116,10 +116,7 @@ class LessonForm extends Component {
     }
 
     onArtifactTypeChange(artifact_type) {
-        this.setStateAndName({
-            artifact_type,
-            error: (artifact_type !== "main") ? null : this.state.error
-        });
+        this.setStateAndName({artifact_type});
     }
 
     onManualEdit(manual_name) {
@@ -208,8 +205,6 @@ class LessonForm extends Component {
         // override lesson preparation value
         if (pattern === "" && part === 0) {
             pattern = "achana";
-        } else if (pattern === "" && artifact_type !== ARTIFACT_TYPES[0].value) {
-            pattern = artifact_type;
         }
         pattern = pattern.toLowerCase().trim();
 
@@ -219,7 +214,7 @@ class LessonForm extends Component {
             "_" +
             capture_date +
             "_" +
-            CONTENT_TYPES_MAPPINGS[content_type].pattern +
+            CONTENT_TYPES_MAPPINGS[artifact_type === ARTIFACT_TYPES[0].value ? content_type : artifact_type].pattern +
             (pattern ? "_" + pattern : "") +
             "_n" +
             (number || 1) +
@@ -242,11 +237,10 @@ class LessonForm extends Component {
     }
 
     isValidClassification() {
-        const {sources, tags, part, artifact_type} = this.state;
+        const {sources, tags, part} = this.state;
         return sources.length !== 0 ||
             tags.length !== 0 ||
-            part === 0 ||
-            artifact_type !== "main";
+            part === 0;
     }
 
     renderSelectedSources() {

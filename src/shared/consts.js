@@ -73,11 +73,6 @@ export const LECTURERS = [
     {text: "בלי רב", value: "norav"},
 ];
 
-export const ARTIFACT_TYPES = [
-    {text: "תוכן מרכזי", value: "main"},
-    {text: "קטעי מקור", value: "kitei_makor"},
-];
-
 // Collection Types
 export const CT_DAILY_LESSON = "DAILY_LESSON";
 export const CT_SATURDAY_LESSON = "SATURDAY_LESSON";
@@ -108,6 +103,12 @@ export const CT_TRAINING = "TRAINING";
 export const CT_KITEI_MAKOR = "KITEI_MAKOR";
 
 export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
+
+
+export const ARTIFACT_TYPES = [
+    {text: "תוכן מרכזי", value: "main"},
+    {text: "קטעי מקור", value: CT_KITEI_MAKOR},
+];
 
 export const CONTENT_TYPE_BY_ID = {
     1: CT_DAILY_LESSON,
@@ -140,6 +141,7 @@ export const CONTENT_TYPE_BY_ID = {
 export const CONTENT_TYPES_MAPPINGS = {
     [CT_LESSON_PART]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
     [CT_FULL_LESSON]: {collection_type: CT_DAILY_LESSON, pattern: "lesson"},
+    [CT_KITEI_MAKOR]: {collection_type: null, pattern: "kitei-makor"},
     [CT_VIDEO_PROGRAM_CHAPTER]: {collection_type: CT_VIDEO_PROGRAM, pattern: "program"},
     [CT_FRIENDS_GATHERING]: {collection_type: CT_FRIENDS_GATHERINGS, pattern: "yeshivat-haverim"},
     [CT_MEAL]: {collection_type: CT_MEALS, pattern: "seuda"},
