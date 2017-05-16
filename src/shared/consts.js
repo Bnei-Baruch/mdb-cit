@@ -90,7 +90,7 @@ export const CT_LESSON_PART = "LESSON_PART";
 export const CT_LECTURE = "LECTURE";
 export const CT_CHILDREN_LESSON_PART = "CHILDREN_LESSON_PART";
 export const CT_WOMEN_LESSON_PART = "WOMEN_LESSON_PART";
-export const CT_LC_LESSON = "LC_LESSON";
+export const CT_VIRTUAL_LESSON = "VIRTUAL_LESSON";
 export const CT_FRIENDS_GATHERING = "FRIENDS_GATHERING";
 export const CT_MEAL = "MEAL";
 export const CT_VIDEO_PROGRAM_CHAPTER = "VIDEO_PROGRAM_CHAPTER";
@@ -125,7 +125,7 @@ export const CONTENT_TYPE_BY_ID = {
     12: CT_LECTURE,
     13: CT_CHILDREN_LESSON_PART,
     14: CT_WOMEN_LESSON_PART,
-    16: CT_LC_LESSON,
+    16: CT_VIRTUAL_LESSON,
     18: CT_FRIENDS_GATHERING,
     19: CT_MEAL,
     20: CT_VIDEO_PROGRAM_CHAPTER,
@@ -150,7 +150,7 @@ export const CONTENT_TYPES_MAPPINGS = {
     [CT_CLIP]: {collection_type: null, pattern: "clip"},
     [CT_CHILDREN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "children-lesson"},
     [CT_WOMEN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "women-lesson"},
-    [CT_LC_LESSON]: {collection_type: CT_LECTURE_SERIES, pattern: "lc-lesson"},
+    [CT_VIRTUAL_LESSON]: {collection_type: null, pattern: "virtual-lesson"},
 };
 
 export const EVENT_PART_TYPES = [

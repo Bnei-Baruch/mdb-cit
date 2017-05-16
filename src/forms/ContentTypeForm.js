@@ -5,7 +5,7 @@ import {
     CT_CLIP,
     CT_EVENT_PART,
     CT_FRIENDS_GATHERING,
-    CT_LC_LESSON,
+    CT_VIRTUAL_LESSON,
     CT_LECTURE,
     CT_LESSON_PART,
     CT_MEAL,
@@ -17,10 +17,10 @@ import {
 const ContentTypeForm = (props) => {
 
     const otherOptions = [
+        {text: "קליפ", value: CT_CLIP},
+        {text: "שיעור וירטואלי", value: CT_VIRTUAL_LESSON},
         {text: "הרצאה", value: CT_LECTURE},
         {text: "הכשרה", value: CT_TRAINING},
-        {text: "קליפ", value: CT_CLIP},
-        {text: "שיעור לרנינג סנטר", value: CT_LC_LESSON},
         {text: "שיעור נשים", value: CT_WOMEN_LESSON_PART},
         {text: "שיעור ילדים", value: CT_CHILDREN_LESSON_PART},
     ];
