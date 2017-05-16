@@ -150,7 +150,7 @@ export const CONTENT_TYPES_MAPPINGS = {
     [CT_CLIP]: {collection_type: null, pattern: "clip"},
     [CT_CHILDREN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "children-lesson"},
     [CT_WOMEN_LESSON_PART]: {collection_type: CT_LECTURE_SERIES, pattern: "women-lesson"},
-    [CT_VIRTUAL_LESSON]: {collection_type: null, pattern: "virtual-lesson"},
+    [CT_VIRTUAL_LESSON]: {collection_type: null, pattern: "vl"},
 };
 
 export const EVENT_PART_TYPES = [
