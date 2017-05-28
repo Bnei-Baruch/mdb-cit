@@ -3,6 +3,7 @@ import {activateCollection, fetchCollections, fetchSources, fetchTags} from "./s
 import ContentTypeForm from "./forms/ContentTypeForm";
 import LessonForm from "./forms/LessonForm";
 import TVShowForm from "./forms/TVShowForm";
+import VirtualLessonForm from "./forms/VirtualLessonForm";
 import EventPartForm from "./forms/EventPartForm";
 import GenericContentForm from "./forms/GenericContentForm";
 import {
@@ -10,6 +11,7 @@ import {
     CT_LESSON_PART,
     CT_UNKNOWN,
     CT_VIDEO_PROGRAM_CHAPTER,
+    CT_VIRTUAL_LESSON,
     EVENT_CONTENT_TYPES
 } from "./shared/consts";
 
@@ -129,6 +131,13 @@ class CIT extends Component {
                                             collections={store.collections}/>;
                         break;
 
+                    case CT_VIRTUAL_LESSON:
+                        el = <VirtualLessonForm metadata={metadata}
+                                                onSubmit={(e, x) => this.onFormSubmit(x)}
+                                                onCancel={(e) => this.onFormCancel(e)}
+                                                onClear={(e) => this.onClear(e)}
+                                                collections={store.collections}/>;
+                        break;
                     default:
                         el = <GenericContentForm metadata={metadata}
                                                  onSubmit={(e, x) => this.onFormSubmit(x)}

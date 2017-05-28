@@ -1,5 +1,5 @@
 import {extractI18n} from "./utils";
-import {CONTENT_TYPE_BY_ID, CT_VIDEO_PROGRAM, EVENT_CONTENT_TYPES} from "./consts";
+import {CONTENT_TYPE_BY_ID, CT_VIDEO_PROGRAM, CT_VIRTUAL_LESSON, EVENT_CONTENT_TYPES} from "./consts";
 
 const API_BACKEND = process.env.NODE_ENV !== 'production' ?
     process.env.REACT_APP_MDB_URL :
@@ -20,7 +20,7 @@ export const fetchTags = (cb) => Fetcher('hierarchy/tags/', cb);
 
 export const fetchCollections = (cb) => {
     const contentTypes = EVENT_CONTENT_TYPES
-            .concat([CT_VIDEO_PROGRAM])
+            .concat([CT_VIDEO_PROGRAM, CT_VIRTUAL_LESSON])
             .map(x => `content_type=${x}`)
             .join("&"),
         pageSize = 1000,
