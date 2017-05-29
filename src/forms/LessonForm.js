@@ -56,6 +56,7 @@ class LessonForm extends Component {
             manual_name: null,
             sources: [],
             tags: [],
+            major: {},
             error: null,
         };
 
@@ -125,23 +126,34 @@ class LessonForm extends Component {
     }
 
     addSource(selection) {
-        let {sources} = this.state;
+        let sources = this.state.sources;
 
         // Prevent duplicates
         for (let i = 0; i < sources.length; i++) {
-            if (sources[i].length === selection.length && sources[i].every((x, j) => selection[j] === x)) {
+            if (sources[i].length === selection.length &&
+                sources[i].every((x, j) => selection[j] === x)) {
                 return;
             }
         }
 
         sources.push(selection);
-        this.setStateAndName({sources, error: null});
+        const major = this.updateMajor("ADD", "source", sources.length - 1);
+        this.setStateAndName({sources, major, error: null});
     }
 
-    removeSource(idx) {
-        const sources = this.state.sources;
+    removeSource(e, idx) {
+        e.stopPropagation(); // don't bubble up to onSourceClick
+
+        let sources = this.state.sources,
+            major = this.updateMajor("REMOVE", "source", idx);
+
         sources.splice(idx, 1);
-        this.setStateAndName({sources});
+        this.setStateAndName({sources, major});
+    }
+
+    onSourceClick(idx) {
+        const major = this.updateMajor("SET", "source", idx);
+        this.setStateAndName({major});
     }
 
     addTag(selection) {
@@ -155,23 +167,98 @@ class LessonForm extends Component {
         }
 
         tags.push(selection);
-        this.setStateAndName({tags, error: null});
+        const major = this.updateMajor("ADD", "tag", tags.length - 1);
+        this.setStateAndName({tags, major, error: null});
     }
 
-    removeTag(idx) {
-        const tags = this.state.tags;
+    removeTag(e, idx) {
+        e.stopPropagation(); // don't bubble up to onTagClick
+
+        let tags = this.state.tags,
+            major = this.updateMajor("REMOVE", "tag", idx);
+
         tags.splice(idx, 1);
-        this.setStateAndName({tags, ...this.suggestName({tags})});
+        this.setStateAndName({tags, major});
+    }
+
+    onTagClick(idx) {
+        const major = this.updateMajor("SET", "tag", idx);
+        this.setStateAndName({major});
+    }
+
+    updateMajor(op, type, idx) {
+        let major = this.state.major;
+
+        switch (op) {
+            case "SET":
+                major = {type, idx};
+                break;
+            case "ADD":
+                if (!major.type) {
+                    major = {type, idx};
+                }
+                break;
+            case "REMOVE":
+                // If the currently selected major is removed,
+                // pass the torch to the next best option.
+                // Else keep the index in sync.
+                if (major.type === type) {
+                    if (major.idx !== idx && idx < major.idx) {
+                        major.idx--;    // we've been shifted left...
+                    } else if (major.idx === idx) {
+                        let selection = this.state[type + "s"];
+                        if (selection.length > 1) {
+                            // keep it in the family
+                            major = {type, idx: Math.max(0, idx - 1)};
+                        } else {
+                            // try the other type
+                            const type2 = type === "source" ? "tag" : "source",
+                                selection = this.state[type2 + "s"];
+                            if (selection.length > 0) {
+                                major = {type: type2, idx: 0};
+                            } else {
+                                // no replacement
+                                major = {};
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        return major;
     }
 
     suggestName(diff) {
         const {
             content_type, language, lecturer, has_translation, sources, tags, capture_date, number, part,
-            artifact_type
+            artifact_type, major
         } = Object.assign({}, this.state, diff || {});
 
-        // pattern is the deepest node in the chain with a pattern
         let pattern = "";
+
+        if (major.type) {
+            const selection = major.type === "source" ? sources : tags,
+            item = selection[major.idx];
+            if (Array.isArray(item)){
+                // pattern is the deepest node in the chain with a pattern
+                for (let j = item.length - 1; j >= 0; j--) {
+                    const x = item[j];
+                    if (!!x.pattern) {
+                        pattern = x.pattern;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Note: We keep the 2 following paragraphs for cases where
+        // major has no pattern in it's chain.
+        // In such cases we take what we have if possible.
+
+        // pattern is the deepest node in the chain with a pattern
         for (let i = 0; pattern === "" && i < tags.length; i++) {
             const tag = tags[i];
             for (let j = tag.length - 1; j >= 0; j--) {
@@ -237,7 +324,7 @@ class LessonForm extends Component {
     }
 
     renderSelectedSources() {
-        const sources = this.state.sources;
+        const {sources, major} = this.state;
 
         if (sources.length === 0) {
             return <List className="bb-selected-sources-list">
@@ -249,11 +336,16 @@ class LessonForm extends Component {
 
         return <List className="bb-selected-sources-list">
             {sources.map((x, i) => {
-                let title = x.map(y => y.name).join(", ");
+                const title = x.map(y => y.name).join(", "),
+                    isMajor = major.type === "source" && major.idx === i;
+
                 return <List.Item key={i}>
-                    <Label basic color="blue" size="large">
+                    <Label color="blue"
+                           size="large"
+                           basic={!isMajor}
+                           onClick={() => this.onSourceClick(i)}>
                         {title}
-                        <Icon name="delete" onClick={() => this.removeSource(i)}/>
+                        <Icon name="delete" onClick={(e) => this.removeSource(e, i)}/>
                     </Label>
                 </List.Item>
             })}
@@ -261,7 +353,7 @@ class LessonForm extends Component {
     }
 
     renderSelectedTags() {
-        const tags = this.state.tags;
+        const {tags, major} = this.state;
 
         if (tags.length === 0) {
             return <List className="bb-selected-sources-list">
@@ -273,9 +365,13 @@ class LessonForm extends Component {
 
         return <div className="bb-selected-sources-list">
             {tags.map((x, i) => {
-                return <Label basic key={i} color="pink" size="large">
+                const isMajor = major.type === "tag" && major.idx === i;
+                return <Label color="pink"
+                              size="large"
+                              basic={!isMajor} key={i}
+                              onClick={() => this.onTagClick(i)}>
                     {x[x.length - 1].label}
-                    <Icon name="delete" onClick={() => this.removeTag(i)}/>
+                    <Icon name="delete" onClick={(e) => this.removeTag(e, i)}/>
                 </Label>
             })}
         </div>;

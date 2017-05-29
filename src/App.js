@@ -20,8 +20,8 @@ class App extends Component {
         const metadata = {
             // collection_type: "CONGRESS",
             // content_type: "FULL_LESSON",
-            // content_type: "LESSON_PART",
-            content_type: "VIRTUAL_LESSON",
+            content_type: "LESSON_PART",
+            // content_type: "VIRTUAL_LESSON",
             // content_type: "MEAL",
             // content_type: "UNKNOWN",
             // content_type: "VIDEO_PROGRAM_CHAPTER",
@@ -36,8 +36,12 @@ class App extends Component {
             part: 0,
             part_type: 0,
             // manual_name: "some manual name",
-            // sources: ["oYUdhxLb", "DWEMapUM", "lSpiPiaX"],
-            // tags: ["7vtV1gDJ", "K9q0p0nq"],
+            sources: ["PW905OyJ", "av4R4Ve6", "jRNM0kiY"],
+            tags: ["SuqPuYoZ", "XuTr8IEN"],
+            major: {
+                type: "tag",
+                idx: 1
+            }
         };
 
         return <Container>
