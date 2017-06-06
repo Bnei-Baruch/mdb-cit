@@ -74,16 +74,16 @@ export const LECTURERS = [
 ];
 
 // Collection Types
-export const CT_DAILY_LESSON = "DAILY_LESSON";
-export const CT_SATURDAY_LESSON = "SATURDAY_LESSON";
+export const CT_DAILY_LESSON       = "DAILY_LESSON";
+export const CT_SPECIAL_LESSON     = "SPECIAL_LESSON";
 export const CT_FRIENDS_GATHERINGS = "FRIENDS_GATHERINGS";
-export const CT_CONGRESS = "CONGRESS";
-export const CT_VIDEO_PROGRAM = "VIDEO_PROGRAM";
-export const CT_LECTURE_SERIES = "LECTURE_SERIES";
-export const CT_MEALS = "MEALS";
-export const CT_HOLIDAY = "HOLIDAY";
-export const CT_PICNIC = "PICNIC";
-export const CT_UNITY_DAY = "UNITY_DAY";
+export const CT_CONGRESS           = "CONGRESS";
+export const CT_VIDEO_PROGRAM      = "VIDEO_PROGRAM";
+export const CT_LECTURE_SERIES     = "LECTURE_SERIES";
+export const CT_MEALS              = "MEALS";
+export const CT_HOLIDAY            = "HOLIDAY";
+export const CT_PICNIC             = "PICNIC";
+export const CT_UNITY_DAY          = "UNITY_DAY";
 
 // Content Unit Types
 export const CT_LESSON_PART = "LESSON_PART";
@@ -112,7 +112,7 @@ export const ARTIFACT_TYPES = [
 
 export const CONTENT_TYPE_BY_ID = {
     1: CT_DAILY_LESSON,
-    2: CT_SATURDAY_LESSON,
+    2: CT_SPECIAL_LESSON,
     3: CT_FRIENDS_GATHERINGS,
     4: CT_CONGRESS,
     5: CT_VIDEO_PROGRAM,
