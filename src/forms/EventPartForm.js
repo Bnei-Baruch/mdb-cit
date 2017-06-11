@@ -154,7 +154,7 @@ class EventPartForm extends Component {
         if (active_events.length !== 0) {
             const e = active_events[event];
             pattern = e.properties.pattern;
-            eventType = e.type;
+            eventType = e.type.replace(/_/g, '-');
         }
         // let pattern = active_events.length !== 0 ? active_events[event].properties.pattern : "";
 
@@ -167,8 +167,7 @@ class EventPartForm extends Component {
             eventType +
             "_" +
             EVENT_PART_TYPES[part_type].pattern +
-            "_" +
-            pattern +
+            (pattern ? "_" + pattern : "") +
             "_n" +
             (number || 1)
         ;
