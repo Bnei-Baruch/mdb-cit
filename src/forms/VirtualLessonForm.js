@@ -70,6 +70,7 @@ class VirtualLessonForm extends Component {
             lecturer: LECTURERS[0].value,
             has_translation: true,
             capture_date: today(),
+            require_test: false,
             vl: 0,
             topic: "",
             manual_name: null,
@@ -140,6 +141,10 @@ class VirtualLessonForm extends Component {
         this.setState({has_translation, auto_name: this.suggestName({has_translation})});
     }
 
+    onRequireTestChange(require_test) {
+        this.setState({require_test});
+    }
+
     onManualEdit(manual_name) {
         this.setState({manual_name});
     }
@@ -173,7 +178,17 @@ class VirtualLessonForm extends Component {
     }
 
     render() {
-        const {vl, topic, language, lecturer, has_translation, auto_name, manual_name, active_vls} = this.state;
+        const {
+            vl,
+                topic,
+                language,
+                lecturer,
+                has_translation,
+                require_test,
+                auto_name,
+                manual_name,
+                active_vls
+        } = this.state;
 
         return <Grid stackable container>
             <Grid.Row columns={1}>
@@ -230,6 +245,13 @@ class VirtualLessonForm extends Component {
                                 <Checkbox label="מתורגם"
                                           checked={has_translation}
                                           onChange={(e, data) => this.onTranslationChange(data.checked)}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Checkbox label="צריך בדיקה"
+                                          checked={require_test}
+                                          onChange={(e, data) => this.onRequireTestChange(data.checked)}/>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
