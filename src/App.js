@@ -19,10 +19,10 @@ class App extends Component {
     const metadata = {
       // collection_type: "CONGRESS",
       // content_type: "FULL_LESSON",
-      content_type: 'LESSON_PART',
+      // content_type: 'LESSON_PART',
       // content_type: "VIRTUAL_LESSON",
       // content_type: "MEAL",
-      // content_type: "UNKNOWN",
+      content_type: 'UNKNOWN',
       // content_type: "VIDEO_PROGRAM_CHAPTER",
       language: 'heb',
       lecturer: 'rav',

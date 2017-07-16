@@ -16,15 +16,6 @@ import {
   CT_WOMEN_LESSON_PART
 } from '../shared/consts';
 
-const otherOptions = [
-  { text: 'קליפ', value: CT_CLIP },
-  { text: 'שיעור וירטואלי', value: CT_VIRTUAL_LESSON },
-  { text: 'הרצאה', value: CT_LECTURE },
-  { text: 'הכשרה', value: CT_TRAINING },
-  { text: 'שיעור נשים', value: CT_WOMEN_LESSON_PART },
-  { text: 'שיעור ילדים', value: CT_CHILDREN_LESSON_PART },
-];
-
 const ContentTypeForm = props => (
   <Grid columns="equal">
     <Grid.Row columns={2}>
@@ -41,7 +32,7 @@ const ContentTypeForm = props => (
         <Button
           fluid
           content="תכנית טלוויזיה"
-          color="teal"
+          color="purple"
           size="massive"
           onClick={() => props.onSelect(CT_VIDEO_PROGRAM_CHAPTER)}
         />
@@ -71,21 +62,61 @@ const ContentTypeForm = props => (
       <Grid.Column>
         <Button
           fluid
+          content="שיעור וירטואלי"
+          color="teal"
+          size="massive"
+          onClick={() => props.onSelect(CT_VIRTUAL_LESSON)}
+        />
+      </Grid.Column>
+      <Grid.Column>
+        <Button
+          fluid
           content="אירוע מיוחד"
-          color="yellow"
+          color="teal"
           size="massive"
           onClick={() => props.onSelect(CT_EVENT_PART)}
         />
       </Grid.Column>
     </Grid.Row>
-    <Grid.Row>
+    <Grid.Row columns={5}>
       <Grid.Column>
-        <Dropdown
+        <Button
           fluid
-          selection
-          placeholder="אחר"
-          options={otherOptions}
-          onChange={(e, data) => props.onSelect(data.value)}
+          content="קליפ"
+          color="grey"
+          onClick={() => props.onSelect(CT_CLIP)}
+        />
+      </Grid.Column>
+      <Grid.Column>
+        <Button
+          fluid
+          content="הרצאה"
+          color="grey"
+          onClick={() => props.onSelect(CT_LECTURE)}
+        />
+      </Grid.Column>
+      <Grid.Column>
+        <Button
+          fluid
+          content="הכשרה"
+          color="grey"
+          onClick={() => props.onSelect(CT_TRAINING)}
+        />
+      </Grid.Column>
+      <Grid.Column>
+        <Button
+          fluid
+          content="שיעור נשים"
+          color="grey"
+          onClick={() => props.onSelect(CT_WOMEN_LESSON_PART)}
+        />
+      </Grid.Column>
+      <Grid.Column>
+        <Button
+          fluid
+          content="שיעור ילדים"
+          color="grey"
+          onClick={() => props.onSelect(CT_CHILDREN_LESSON_PART)}
         />
       </Grid.Column>
     </Grid.Row>
