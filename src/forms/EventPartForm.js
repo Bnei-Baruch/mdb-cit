@@ -133,6 +133,12 @@ class EventPartForm extends Component {
         number: 1,
         ...this.suggestName({ number })
       });
+    } else if (number < 0) {
+      this.setState({
+        error: 'שדה מספר חייב להיות גדול מאפס',
+        number: 1,
+        ...this.suggestName({ number })
+      });
     } else {
       this.setState({ number, error: null, ...this.suggestName({ number }) });
     }
@@ -196,7 +202,7 @@ class EventPartForm extends Component {
       EVENT_PART_TYPES[partType].pattern +
       (pattern ? `_${pattern}` : '') +
       '_n' +
-      (number || 1)
+      (Number.isNaN(number) ? 1 : number)
     ;
 
     return {
