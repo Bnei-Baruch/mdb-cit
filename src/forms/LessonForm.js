@@ -19,18 +19,18 @@ import FileNamesWidget from '../components/FileNamesWidget';
 class LessonForm extends Component {
 
   static propTypes = {
+    metadata: Metadata,
     availableSources: SourcesTree,
     availableTags: TagsTree,
-    metadata: Metadata,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    metadata: EMPTY_OBJECT,
     availableSources: EMPTY_ARRAY,
     availableTags: EMPTY_ARRAY,
-    metadata: EMPTY_OBJECT,
   };
 
   constructor(props) {
@@ -389,7 +389,7 @@ class LessonForm extends Component {
 
     if (tags.length === 0) {
       return (
-        <List className="bb-selected-sources-list">
+        <List className="bb-selected-tags-list">
           <List.Item>
             <Header as="h5" color="grey">אין תגיות</Header>
           </List.Item>
@@ -398,7 +398,7 @@ class LessonForm extends Component {
     }
 
     return (
-      <div className="bb-selected-sources-list">
+      <div className="bb-selected-tags-list">
         {
           tags.map((x, i) => {
             const isMajor = major.type === 'tag' && major.idx === i;

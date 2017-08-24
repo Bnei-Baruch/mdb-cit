@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Grid } from 'semantic-ui-react';
+import { Button, Grid } from 'semantic-ui-react';
 
 import {
   CT_CHILDREN_LESSON_PART,

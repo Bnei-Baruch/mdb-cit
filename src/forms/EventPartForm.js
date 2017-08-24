@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Checkbox, Dropdown, Grid, Header, Input, Label } from 'semantic-ui-react';
+import { Button, Checkbox, Dropdown, Grid, Header, Icon, Input, Label, List } from 'semantic-ui-react';
 
-import { EMPTY_OBJECT, EVENT_CONTENT_TYPES, EVENT_PART_TYPES, LANGUAGES, LECTURERS } from '../shared/consts';
-import { isActive, today } from '../shared/utils';
-import { Metadata } from '../shared/shapes';
+import {
+  EMPTY_ARRAY,
+  EMPTY_OBJECT,
+  EVENT_CONTENT_TYPES,
+  EVENT_PART_TYPES,
+  LANGUAGES,
+  LECTURERS
+} from '../shared/consts';
+import { findPath, isActive, today } from '../shared/utils';
+import { Metadata, TagsTree } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
+import TagSelector from '../components/TagSelector';
 
 const getActiveEvents = collections =>
   EVENT_CONTENT_TYPES.reduce((acc, val) =>
@@ -16,6 +24,7 @@ class EventPartForm extends Component {
 
   static propTypes = {
     metadata: Metadata,
+    availableTags: TagsTree,
     collections: PropTypes.instanceOf(Map),
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -24,6 +33,7 @@ class EventPartForm extends Component {
 
   static defaultProps = {
     metadata: EMPTY_OBJECT,
+    availableTags: EMPTY_ARRAY,
     collections: new Map(),
   };
 
@@ -43,6 +53,8 @@ class EventPartForm extends Component {
       has_translation: true,
       capture_date: today(),
       manual_name: null,
+      tags: [],
+      major: {},
       active_events: [],
       error: null,
     };
@@ -54,7 +66,9 @@ class EventPartForm extends Component {
       const idx   = state.active_events.findIndex(x => x.uid === props.metadata.collection_uid);
       state.event = idx > -1 ? idx : 0;
     }
-    state = { ...state, ...this.suggestName(state) };
+    state.tags = props.availableTags.length > 0 ?
+      state.tags.map(x => findPath(props.availableTags, x)) : [];
+    state      = { ...state, ...this.suggestName(state) };
 
     return state;
   }
@@ -87,6 +101,13 @@ class EventPartForm extends Component {
         ...this.suggestName({ active_events: activeEvents, event }),
       });
     }
+
+    if (nextProps.availableTags.length > 0 &&
+      nextProps.metadata.tags &&
+      this.props.availableTags !== nextProps.availableTags) {
+      const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
+      this.setStateAndName({ tags });
+    }
   }
 
   onSubmit = (e) => {
@@ -100,6 +121,7 @@ class EventPartForm extends Component {
     data.collection_uid  = event.uid;
     data.collection_type = event.type;
     data.final_name      = data.manual_name || data.auto_name;
+    data.tags            = data.tags.map(x => x[x.length - 1].uid);
     delete data.event;
     delete data.active_events;
     delete data.error;
@@ -169,6 +191,96 @@ class EventPartForm extends Component {
     this.setState({ manual_name: data.value });
   };
 
+  onTagClick(idx) {
+    const major = this.updateMajor('SET', 'tag', idx);
+    this.setState({
+      major,
+      ...this.suggestName({ major }),
+    });
+  }
+
+  addTag = (selection) => {
+    const { tags } = this.state;
+
+    // Prevent duplicates
+    for (let i = 0; i < tags.length; i++) {
+      if (tags[i].length === selection.length && tags[i].every((x, j) => selection[j] === x)) {
+        return;
+      }
+    }
+
+    tags.push(selection);
+    const major = this.updateMajor('ADD', 'tag', tags.length - 1);
+    this.setState({
+      tags,
+      major,
+      error: null,
+      ...this.suggestName({ tags, major }),
+    });
+  };
+
+  removeTag(e, idx) {
+    e.stopPropagation(); // don't bubble up to onTagClick
+
+    const tags  = this.state.tags;
+    const major = this.updateMajor('REMOVE', 'tag', idx);
+
+    tags.splice(idx, 1);
+    this.setState({
+      tags,
+      major,
+      ...this.suggestName({ tags, major }),
+    });
+  }
+
+  // this method was copy pasted from LessonForm
+  // so it was designed to work with both sources and tags.
+  // here we have only tags.
+  updateMajor(op, type, idx) {
+    let major = this.state.major;
+
+    switch (op) {
+    case 'SET':
+      major = { type, idx };
+      break;
+    case 'ADD':
+      if (!major.type) {
+        major = { type, idx };
+      }
+      break;
+    case 'REMOVE':
+      // If the currently selected major is removed,
+      // pass the torch to the next best option.
+      // Else keep the index in sync.
+      if (major.type === type) {
+        if (major.idx !== idx && idx < major.idx) {
+          major.idx--;    // we've been shifted left...
+        } else if (major.idx === idx) {
+          const selection = this.state[`${type}s`];
+          if (selection.length > 1) {
+            // keep it in the family
+            major = { type, idx: Math.max(0, idx - 1) };
+          } else {
+            // // try the other type
+            // const type2 = type === 'source' ? 'tag' : 'source';
+            // selection   = this.state[`${type2}s`];
+            // if (selection.length > 0) {
+            //   major = { type: type2, idx: 0 };
+            // } else {
+            // no replacement
+            major = {};
+            // }
+          }
+        }
+      }
+      break;
+    default:
+      break;
+    }
+
+    return major;
+  }
+
   suggestName(diff) {
     const {
             event,
@@ -211,6 +323,42 @@ class EventPartForm extends Component {
     };
   }
 
+  renderSelectedTags() {
+    const { tags, major } = this.state;
+
+    if (tags.length === 0) {
+      return (
+        <List className="bb-selected-tags-list">
+          <List.Item>
+            <Header as="h5" color="grey">אין תגיות</Header>
+          </List.Item>
+        </List>
+      );
+    }
+
+    return (
+      <div className="bb-selected-tags-list">
+        {
+          tags.map((x, i) => {
+            const isMajor = major.type === 'tag' && major.idx === i;
+            return (
+              <Label
+                color="pink"
+                size="large"
+                basic={!isMajor}
+                key={x[x.length - 1].id}
+                onClick={() => this.onTagClick(i)}
+              >
+                {x[x.length - 1].label}
+                <Icon name="delete" onClick={e => this.removeTag(e, i)} />
+              </Label>
+            );
+          })
+        }
+      </div>
+    );
+  }
+
   render() {
     const {
             event,
@@ -225,6 +373,8 @@ class EventPartForm extends Component {
             error
           }            = this.state;
     const eventOptions = activeEvents.map((x, i) => ({ text: x.name, value: i }));
+
+    const { availableTags } = this.props;
 
     return (
       <Grid stackable container>
@@ -268,6 +418,13 @@ class EventPartForm extends Component {
                     defaultValue={number}
                     onChange={this.onNumberChange}
                   />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <Header size="medium">תגיות</Header>
+                  <TagSelector tree={availableTags} onSelect={this.addTag} />
+                  {this.renderSelectedTags()}
                 </Grid.Column>
               </Grid.Row>
             </Grid>
