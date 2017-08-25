@@ -58,10 +58,22 @@ class LessonForm extends Component {
     const state       = Object.assign({}, defaultState, props.metadata);
     state.manual_name = state.manual_name || null;
     Object.assign(state, this.suggestName(state));
-    state.sources = props.availableSources.length > 0 ?
-      state.sources.map(x => findPath(props.availableSources, x)) : [];
-    state.tags    = props.availableTags.length > 0 ?
-      state.tags.map(x => findPath(props.availableTags, x)) : [];
+
+    if (Array.isArray(state.sources)) {
+      state.sources = props.availableSources.length > 0 ?
+        state.sources.map(x => findPath(props.availableSources, x)) :
+        [];
+    } else {
+      state.sources = [];
+    }
+
+    if (Array.isArray(state.tags)) {
+      state.tags = props.availableTags.length > 0 ?
+        state.tags.map(x => findPath(props.availableTags, x)) :
+        [];
+    } else {
+      state.tags = [];
+    }
 
     return state;
   }

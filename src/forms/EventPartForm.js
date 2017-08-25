@@ -66,9 +66,14 @@ class EventPartForm extends Component {
       const idx   = state.active_events.findIndex(x => x.uid === props.metadata.collection_uid);
       state.event = idx > -1 ? idx : 0;
     }
-    state.tags = props.availableTags.length > 0 ?
-      state.tags.map(x => findPath(props.availableTags, x)) : [];
-    state      = { ...state, ...this.suggestName(state) };
+    if (Array.isArray(state.tags)) {
+      state.tags = props.availableTags.length > 0 ?
+        state.tags.map(x => findPath(props.availableTags, x)) :
+        [];
+    } else {
+      state.tags = [];
+    }
+    state = { ...state, ...this.suggestName(state) };
 
     return state;
   }
