@@ -8,7 +8,8 @@ import {
   EMPTY_ARRAY,
   EMPTY_OBJECT,
   LANGUAGES,
-  LECTURERS
+  LECTURERS,
+  LESSON_PARTS_OPTIONS
 } from '../shared/consts';
 import { findPath, today } from '../shared/utils';
 import { Metadata, SourcesTree, TagsTree } from '../shared/shapes';
@@ -433,9 +434,6 @@ class LessonForm extends Component {
   }
 
   render() {
-    const parts = [{ text: 'הכנה', value: 0 }]
-      .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({ text: `חלק ${i}`, value: i })));
-
     const {
             language,
             lecturer,
@@ -483,7 +481,7 @@ class LessonForm extends Component {
                   <Dropdown
                     selection
                     fluid
-                    options={parts}
+                    options={LESSON_PARTS_OPTIONS}
                     value={part}
                     onChange={this.onPartChange}
                   />

@@ -169,3 +169,7 @@ export const EVENT_PART_TYPES = [
   { text: 'חתימת ספרים', content_type: CT_EVENT_PART, pattern: 'hatimat-sfarim' },
   { text: 'אחר', content_type: CT_EVENT_PART, pattern: 'event' },
 ];
+
+export const LESSON_PARTS_OPTIONS = [{ text: 'הכנה', value: 0 }]
+  .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    .map(i => ({ text: `חלק ${i}`, value: i })));

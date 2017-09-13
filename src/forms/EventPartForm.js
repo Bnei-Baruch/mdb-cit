@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { Button, Checkbox, Dropdown, Grid, Header, Icon, Input, Label, List } from 'semantic-ui-react';
 
 import {
+  CT_LESSON_PART,
   EMPTY_ARRAY,
   EMPTY_OBJECT,
   EVENT_CONTENT_TYPES,
   EVENT_PART_TYPES,
   LANGUAGES,
-  LECTURERS
+  LECTURERS,
+  LESSON_PARTS_OPTIONS
 } from '../shared/consts';
 import { findPath, isActive, today } from '../shared/utils';
 import { Metadata, TagsTree } from '../shared/shapes';
@@ -48,6 +50,7 @@ class EventPartForm extends Component {
       event: 0,
       part_type: 0,
       number: 1,
+      part: 1,
       language: LANGUAGES[0].value,
       lecturer: LECTURERS[0].value,
       has_translation: true,
@@ -120,9 +123,16 @@ class EventPartForm extends Component {
       return;
     }
 
-    const data           = { ...this.state };
-    const event          = data.active_events[data.event];
-    data.content_type    = EVENT_PART_TYPES[data.part_type].content_type;
+    const data  = { ...this.state };
+    const event = data.active_events[data.event];
+
+    if (EVENT_PART_TYPES[data.part_type].pattern === 'lesson') {
+      data.content_type = CT_LESSON_PART;
+    } else {
+      data.content_type = EVENT_PART_TYPES[data.part_type].content_type;
+      delete data.part;
+    }
+
     data.collection_uid  = event.uid;
     data.collection_type = event.type;
     data.final_name      = data.manual_name || data.auto_name;
@@ -169,6 +179,11 @@ class EventPartForm extends Component {
     } else {
       this.setState({ number, error: null, ...this.suggestName({ number }) });
     }
+  };
+
+  onPartChange = (e, data) => {
+    const part = data.value;
+    this.setState({ part, ...this.suggestName({ part }) });
   };
 
   onLanguageChange = (e, data) => {
@@ -295,6 +310,7 @@ class EventPartForm extends Component {
             has_translation: hasTranslation,
             capture_date: captureDate,
             number,
+            part,
             active_events: activeEvents,
           } = Object.assign({}, this.state, diff || {});
 
@@ -319,7 +335,8 @@ class EventPartForm extends Component {
       EVENT_PART_TYPES[partType].pattern +
       (pattern ? `_${pattern}` : '') +
       '_n' +
-      (Number.isNaN(number) ? 1 : number)
+      (Number.isNaN(number) ? 1 : number) +
+      (EVENT_PART_TYPES[partType].pattern === 'lesson' ? `_p${part}` : '')
     ;
 
     return {
@@ -369,6 +386,7 @@ class EventPartForm extends Component {
             event,
             part_type: partType,
             number,
+            part,
             language,
             lecturer,
             has_translation: hasTranslation,
@@ -425,6 +443,22 @@ class EventPartForm extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
+              {
+                EVENT_PART_TYPES[partType].pattern === 'lesson' ?
+                  <Grid.Row>
+                    <Grid.Column width={6}>
+                      <Header as="h5">חלק</Header>
+                      <Dropdown
+                        selection
+                        fluid
+                        options={LESSON_PARTS_OPTIONS}
+                        value={part}
+                        onChange={this.onPartChange}
+                      />
+                    </Grid.Column>
+                  </Grid.Row> :
+                  null
+              }
               <Grid.Row>
                 <Grid.Column>
                   <Header size="medium">תגיות</Header>
