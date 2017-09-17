@@ -114,7 +114,10 @@ class EventPartForm extends Component {
       nextProps.metadata.tags &&
       this.props.availableTags !== nextProps.availableTags) {
       const tags = nextProps.metadata.tags.map(x => findPath(nextProps.availableTags, x));
-      this.setStateAndName({ tags });
+      this.setState({
+        tags,
+        ...this.suggestName({ tags }),
+      });
     }
   }
 

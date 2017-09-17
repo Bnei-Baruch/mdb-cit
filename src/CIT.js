@@ -120,6 +120,7 @@ class CIT extends Component {
             onCancel={this.onFormCancel}
             onClear={this.onClear}
             collections={store.collections}
+            availableTags={store.tags}
           />
         );
       } else {
