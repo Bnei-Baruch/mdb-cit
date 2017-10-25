@@ -84,6 +84,9 @@ export const CT_FRIENDS_GATHERINGS = 'FRIENDS_GATHERINGS';
 export const CT_CONGRESS           = 'CONGRESS';
 export const CT_VIDEO_PROGRAM      = 'VIDEO_PROGRAM';
 export const CT_LECTURE_SERIES     = 'LECTURE_SERIES';
+export const CT_CHILDREN_LESSONS   = 'CHILDREN_LESSONS';
+export const CT_WOMEN_LESSONS      = 'WOMEN_LESSONS';
+export const CT_VIRTUAL_LESSONS    = 'VIRTUAL_LESSONS';
 export const CT_MEALS              = 'MEALS';
 export const CT_HOLIDAY            = 'HOLIDAY';
 export const CT_PICNIC             = 'PICNIC';
@@ -92,8 +95,8 @@ export const CT_UNITY_DAY          = 'UNITY_DAY';
 // Content Unit Types
 export const CT_LESSON_PART           = 'LESSON_PART';
 export const CT_LECTURE               = 'LECTURE';
-export const CT_CHILDREN_LESSON_PART  = 'CHILDREN_LESSON_PART';
-export const CT_WOMEN_LESSON_PART     = 'WOMEN_LESSON_PART';
+export const CT_CHILDREN_LESSON       = 'CHILDREN_LESSON';
+export const CT_WOMEN_LESSON          = 'WOMEN_LESSON';
 export const CT_VIRTUAL_LESSON        = 'VIRTUAL_LESSON';
 export const CT_FRIENDS_GATHERING     = 'FRIENDS_GATHERING';
 export const CT_MEAL                  = 'MEAL';
@@ -107,6 +110,7 @@ export const CT_TRAINING              = 'TRAINING';
 export const CT_KITEI_MAKOR           = 'KITEI_MAKOR';
 
 export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
+export const LECTURE_CONTENT_TYPES = [CT_LECTURE_SERIES, CT_CHILDREN_LESSONS, CT_WOMEN_LESSONS, CT_VIRTUAL_LESSONS];
 
 export const ARTIFACT_TYPES = [
   { text: 'תוכן מרכזי', value: 'main' },
@@ -126,8 +130,8 @@ export const CONTENT_TYPE_BY_ID = {
   10: CT_UNITY_DAY,
   11: CT_LESSON_PART,
   12: CT_LECTURE,
-  13: CT_CHILDREN_LESSON_PART,
-  14: CT_WOMEN_LESSON_PART,
+  13: CT_CHILDREN_LESSON,
+  14: CT_WOMEN_LESSON,
   16: CT_VIRTUAL_LESSON,
   18: CT_FRIENDS_GATHERING,
   19: CT_MEAL,
@@ -139,6 +143,9 @@ export const CONTENT_TYPE_BY_ID = {
   29: CT_CLIP,
   30: CT_TRAINING,
   31: CT_KITEI_MAKOR,
+  32: CT_VIRTUAL_LESSONS,
+  33: CT_CHILDREN_LESSONS,
+  34: CT_WOMEN_LESSONS,
 };
 
 export const CONTENT_TYPES_MAPPINGS = {
@@ -151,9 +158,9 @@ export const CONTENT_TYPES_MAPPINGS = {
   [CT_LECTURE]: { collection_type: CT_LECTURE_SERIES, pattern: 'lecture' },
   [CT_TRAINING]: { collection_type: null, pattern: 'training' },
   [CT_CLIP]: { collection_type: null, pattern: 'clip' },
-  [CT_CHILDREN_LESSON_PART]: { collection_type: CT_LECTURE_SERIES, pattern: 'children-lesson' },
-  [CT_WOMEN_LESSON_PART]: { collection_type: CT_LECTURE_SERIES, pattern: 'women-lesson' },
-  [CT_VIRTUAL_LESSON]: { collection_type: null, pattern: 'vl' },
+  [CT_CHILDREN_LESSON]: { collection_type: CT_CHILDREN_LESSONS, pattern: 'children-lesson' },
+  [CT_WOMEN_LESSON]: { collection_type: CT_WOMEN_LESSONS, pattern: 'women-lesson' },
+  [CT_VIRTUAL_LESSON]: { collection_type: CT_VIRTUAL_LESSONS, pattern: 'vl' },
 };
 
 export const EVENT_PART_TYPES = [

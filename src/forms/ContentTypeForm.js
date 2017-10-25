@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Grid } from 'semantic-ui-react';
 
 import {
-  CT_CHILDREN_LESSON_PART,
+  CT_CHILDREN_LESSON,
   CT_CLIP,
   CT_EVENT_PART,
   CT_FRIENDS_GATHERING,
@@ -13,7 +13,7 @@ import {
   CT_TRAINING,
   CT_VIDEO_PROGRAM_CHAPTER,
   CT_VIRTUAL_LESSON,
-  CT_WOMEN_LESSON_PART
+  CT_WOMEN_LESSON
 } from '../shared/consts';
 
 const ContentTypeForm = props => (
@@ -108,7 +108,7 @@ const ContentTypeForm = props => (
           fluid
           content="שיעור נשים"
           color="grey"
-          onClick={() => props.onSelect(CT_WOMEN_LESSON_PART)}
+          onClick={() => props.onSelect(CT_WOMEN_LESSON)}
         />
       </Grid.Column>
       <Grid.Column>
@@ -116,7 +116,7 @@ const ContentTypeForm = props => (
           fluid
           content="שיעור ילדים"
           color="grey"
-          onClick={() => props.onSelect(CT_CHILDREN_LESSON_PART)}
+          onClick={() => props.onSelect(CT_CHILDREN_LESSON)}
         />
       </Grid.Column>
     </Grid.Row>

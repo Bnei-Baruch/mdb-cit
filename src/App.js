@@ -15,33 +15,56 @@ class App extends Component {
   };
 
   render() {
-    // const metadata = {};
     const metadata = {
-      // collection_type: "CONGRESS",
-      // content_type: "FULL_LESSON",
+      // auto_name: 'mlt_o_rav_2017-09-16_congress_lesson_georgia_n5_p1',
+      capture_date: '2017-09-16',
+      // collection_type: 'CONGRESS',
+      // collection_uid: 'iycyvtch',
       // content_type: 'LESSON_PART',
-      // content_type: "VIRTUAL_LESSON",
-      // content_type: "MEAL",
-      content_type: 'UNKNOWN',
-      // content_type: "VIDEO_PROGRAM_CHAPTER",
-      language: 'heb',
-      lecturer: 'rav',
-      has_translation: true,
-      // require_test: true,
-      // capture_date: "2017-04-11",
-      // collection_uid: "ukFliiGb",
-      episode: '827',
-      number: 2,
-      part: 0,
-      part_type: 0,
-      // manual_name: "some manual name",
-      sources: ['PW905OyJ', 'av4R4Ve6', 'jRNM0kiY'],
-      tags: ['SuqPuYoZ', 'XuTr8IEN'],
-      major: {
-        type: 'tag',
-        idx: 1
-      }
+      // final_name: 'mlt_o_rav_2017-09-16_congress_lesson_georgia_n5_p1',
+      // hag: 'Shabbat',
+      // has_translation: true,
+      // holiday: true,
+      // language: 'rus',
+      // lecturer: 'rav',
+      // lid: 'c1505584051481',
+      // major: { idx: 0, type: 'tag' },
+      // manual_name: null,
+      // number: 5,
+      // part: 1,
+      // part_type: 0,
+      // pattern: 'georgia',
+      // require_test: false,
+      // tags: ['jhNPh3eg'],
+      // week_date: '2017-09-15',
     };
+    // const metadata = {
+    //   // collection_type: "CONGRESS",
+    //   // content_type: "FULL_LESSON",
+    //   // content_type: 'LESSON_PART',
+    //   // content_type: "VIRTUAL_LESSON",
+    //   // content_type: "MEAL",
+    //   content_type: 'UNKNOWN',
+    //   // content_type: "VIDEO_PROGRAM_CHAPTER",
+    //   language: 'heb',
+    //   lecturer: 'rav',
+    //   has_translation: true,
+    //   // require_test: true,
+    //   // capture_date: "2017-04-11",
+    //   // collection_uid: "ukFliiGb",
+    //   episode: '827',
+    //   number: 2,
+    //   part: 0,
+    //   part_type: 0,
+    //   // manual_name: "some manual name",
+    //   sources: ['PW905OyJ', 'av4R4Ve6', 'jRNM0kiY'],
+    //   // tags: null,
+    //   // tags: ['SuqPuYoZ', 'XuTr8IEN'],
+    //   // major: {
+    //   //   type: 'tag',
+    //   //   idx: 1
+    //   // }
+    // };
 
     return (
       <Container>

@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 
 import {
+  CT_CHILDREN_LESSON,
   CT_EVENT_PART,
+  CT_LECTURE,
   CT_LESSON_PART,
   CT_UNKNOWN,
   CT_VIDEO_PROGRAM_CHAPTER,
   CT_VIRTUAL_LESSON,
+  CT_WOMEN_LESSON,
   EVENT_CONTENT_TYPES
 } from './shared/consts';
 import { Metadata } from './shared/shapes';
@@ -164,6 +167,9 @@ class CIT extends Component {
           );
           break;
 
+        case CT_LECTURE:
+        case CT_CHILDREN_LESSON:
+        case CT_WOMEN_LESSON:
         case CT_VIRTUAL_LESSON:
           el = (
             <VirtualLessonForm
@@ -175,6 +181,7 @@ class CIT extends Component {
             />
           );
           break;
+
         default:
           el = (
             <GenericContentForm

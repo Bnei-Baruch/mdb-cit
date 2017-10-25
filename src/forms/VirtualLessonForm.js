@@ -2,23 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Checkbox, Dropdown, Grid, Header, Input } from 'semantic-ui-react';
 
-import {
-  CONTENT_TYPES_MAPPINGS,
-  CT_VIRTUAL_LESSON,
-  EMPTY_OBJECT,
-  LANGUAGES,
-  LECTURERS,
-  MDB_LANGUAGES
-} from '../shared/consts';
+import { CONTENT_TYPES_MAPPINGS, EMPTY_OBJECT, LANGUAGES, LECTURERS, MDB_LANGUAGES } from '../shared/consts';
 import { isActive, today } from '../shared/utils';
 import { Metadata } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
 
-const getVirtualLessons = collections => collections.get(CT_VIRTUAL_LESSON) || [];
+const getCollections = (collections, type) =>
+  collections.get(CONTENT_TYPES_MAPPINGS[type].collection_type) || [];
 
-const getActiveVirtualLessons = collections =>
-  getVirtualLessons(collections)
-    .filter(x => isActive(x))
+const getActiveCollections = (collections, type) =>
+  getCollections(collections, type)
+    .filter(isActive)
     .concat([{ name: 'אחר', uid: null, properties: { default_language: 'he', pattern: null } }]);
 
 class VirtualLessonForm extends Component {
@@ -58,7 +52,7 @@ class VirtualLessonForm extends Component {
     state.manual_name  = state.manual_name || null;
 
     // filter collections and lookup specified show
-    state.active_vls = getActiveVirtualLessons(props.collections);
+    state.active_vls = getActiveCollections(props.collections, props.metadata.content_type);
     if (props.metadata.collection_uid) {
       const idx = state.active_vls.findIndex(x => x.uid === props.metadata.collection_uid);
       state.vl  = idx > -1 ? idx : 0;
@@ -91,7 +85,7 @@ class VirtualLessonForm extends Component {
       }
 
       // filter shows
-      const activeVLs = getActiveVirtualLessons(nextProps.collections);
+      const activeVLs = getActiveCollections(nextProps.collections, nextProps.metadata.content_type);
 
       // lookup show in filtered list
       if (cuid) {
@@ -222,7 +216,7 @@ class VirtualLessonForm extends Component {
       <Grid stackable container>
         <Grid.Row columns={1}>
           <Grid.Column>
-            <Header as="h2" color="blue">פרטי השיעור הוירטואלי</Header>
+            <Header as="h2" color="blue">פרטי השיעור</Header>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns={3} className="bb-interesting">
