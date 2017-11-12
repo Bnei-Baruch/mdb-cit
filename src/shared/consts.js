@@ -91,6 +91,7 @@ export const CT_MEALS              = 'MEALS';
 export const CT_HOLIDAY            = 'HOLIDAY';
 export const CT_PICNIC             = 'PICNIC';
 export const CT_UNITY_DAY          = 'UNITY_DAY';
+export const CT_CLIPS              = 'CLIPS';
 
 // Content Unit Types
 export const CT_LESSON_PART           = 'LESSON_PART';
@@ -109,7 +110,7 @@ export const CT_CLIP                  = 'CLIP';
 export const CT_TRAINING              = 'TRAINING';
 export const CT_KITEI_MAKOR           = 'KITEI_MAKOR';
 
-export const EVENT_CONTENT_TYPES = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
+export const EVENT_CONTENT_TYPES   = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
 export const LECTURE_CONTENT_TYPES = [CT_LECTURE_SERIES, CT_CHILDREN_LESSONS, CT_WOMEN_LESSONS, CT_VIRTUAL_LESSONS];
 
 export const ARTIFACT_TYPES = [
@@ -146,6 +147,7 @@ export const CONTENT_TYPE_BY_ID = {
   32: CT_VIRTUAL_LESSONS,
   33: CT_CHILDREN_LESSONS,
   34: CT_WOMEN_LESSONS,
+  35: CT_CLIPS,
 };
 
 export const CONTENT_TYPES_MAPPINGS = {
