@@ -14,7 +14,7 @@ import {
   EVENT_CONTENT_TYPES
 } from './shared/consts';
 import { Metadata } from './shared/shapes';
-import { activateCollection, fetchCollections, fetchSources, fetchTags } from './shared/store';
+import { fetchCollections, fetchSources, fetchTags } from './shared/store';
 import ContentTypeForm from './forms/ContentTypeForm';
 import LessonForm from './forms/LessonForm';
 import TVShowForm from './forms/TVShowForm';
@@ -103,12 +103,6 @@ class CIT extends Component {
     this.setState({ metadata });
   };
 
-  onActivateShow(tvshow) {
-    activateCollection(tvshow.id, () =>
-      fetchCollections(x => this.setState({ store: { ...this.state.store, collections: x } }))
-    );
-  }
-
   render() {
     const { store, metadata } = this.state;
 
@@ -149,7 +143,6 @@ class CIT extends Component {
               onCancel={this.onFormCancel}
               onClear={this.onClear}
               collections={store.collections}
-              onActivateShow={(e, x) => this.onActivateShow(x)}
             />
           );
           break;

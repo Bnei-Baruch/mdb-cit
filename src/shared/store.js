@@ -57,13 +57,3 @@ export const fetchCollections = (cb) => {
 
   Fetcher(`${path}&page_no=${page}`, processPage);
 };
-
-export const activateCollection = (id, cb) =>
-  fetch(`${API_BACKEND}rest/collections/${id}/activate`, { method: 'POST' })
-    .then((response) => {
-      if (response.ok) {
-        return response.json().then(data => cb(data));
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .catch(ex => console.log('activate collection', id, ex));

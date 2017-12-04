@@ -22,7 +22,6 @@ class TVShowForm extends Component {
   static propTypes = {
     metadata: Metadata,
     collections: PropTypes.instanceOf(Map),
-    onActivateShow: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
@@ -203,51 +202,6 @@ class TVShowForm extends Component {
     return name.toLowerCase().trim();
   }
 
-  renderManageDropdown() {
-    const { collections, onActivateShow } = this.props;
-
-    const options = getTVShows(collections).map((x, i) => {
-      const active = isActive(x);
-      const action = active ?
-        (
-          <Button
-            circular
-            icon="remove"
-            floated="right"
-            size="mini"
-            color="red"
-            title="Disable"
-            onClick={e => onActivateShow(e, x)}
-          />
-        ) :
-        (
-          <Button
-            circular
-            icon="checkmark"
-            floated="right"
-            size="mini"
-            color="green"
-            title="Enable"
-            onClick={e => onActivateShow(e, x)}
-          />
-        );
-
-      return {
-        content: (
-          <div>
-            {action}
-            <strong>{x.name}</strong>
-            <br />
-            <span className="description">{x.properties.pattern}</span>
-          </div>
-        ),
-        value: i,
-      };
-    });
-
-    return <Dropdown selection fluid placeholder="בחר תוכנית" options={options} />;
-  }
-
   render() {
     const {
             tv_show: tvShow,
@@ -288,12 +242,6 @@ class TVShowForm extends Component {
                     defaultValue={episode}
                     onChange={this.onEpisodeChange}
                   />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column>
-                  <Header as="h5">ניהול תוכניות</Header>
-                  {this.renderManageDropdown()}
                 </Grid.Column>
               </Grid.Row>
             </Grid>
