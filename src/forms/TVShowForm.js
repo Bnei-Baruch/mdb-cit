@@ -15,7 +15,18 @@ import { Metadata } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
 
 const getTVShows     = collections => collections.get(CT_VIDEO_PROGRAM) || [];
-const getActiveShows = collections => getTVShows(collections).filter(isActive);
+const getActiveShows = (collections) => {
+  const active = getTVShows(collections).filter(isActive);
+  active.sort((a, b) => {
+    if (a.name < b.name) {
+      return -1;
+    } else if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
+  return active;
+};
 
 class TVShowForm extends Component {
 
