@@ -16,6 +16,7 @@ import { findPath, isActive, today } from '../shared/utils';
 import { Metadata, TagsTree } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
 import TagSelector from '../components/TagSelector';
+import CassetteDayPicker from '../components/CassetteDayPicker';
 
 const getActiveEvents = collections =>
   EVENT_CONTENT_TYPES.reduce((acc, val) =>
@@ -55,6 +56,7 @@ class EventPartForm extends Component {
       lecturer: LECTURERS[0].value,
       has_translation: true,
       capture_date: today(),
+      film_date: today(),
       manual_name: null,
       tags: [],
       major: {},
@@ -143,6 +145,9 @@ class EventPartForm extends Component {
     delete data.event;
     delete data.active_events;
     delete data.error;
+    if (!this.props.metadata.label_id) {
+      delete data.film_date;
+    }
 
     this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
   };
@@ -207,6 +212,13 @@ class EventPartForm extends Component {
     this.setState({
       has_translation: data.checked,
       ...this.suggestName({ has_translation: data.checked }),
+    });
+  };
+
+  onFilmDateChange = (date) => {
+    this.setState({
+      film_date: date,
+      ...this.suggestName({ film_date: date }),
     });
   };
 
@@ -312,6 +324,7 @@ class EventPartForm extends Component {
             lecturer,
             has_translation: hasTranslation,
             capture_date: captureDate,
+            film_date: filmDate,
             number,
             part,
             active_events: activeEvents,
@@ -331,7 +344,7 @@ class EventPartForm extends Component {
       '_o_' +
       lecturer +
       '_' +
-      captureDate +
+      (this.props.metadata.label_id ? filmDate : captureDate) +
       '_' +
       eventType +
       '_' +
@@ -400,10 +413,10 @@ class EventPartForm extends Component {
           }            = this.state;
     const eventOptions = activeEvents.map((x, i) => ({ text: x.name, value: i }));
 
-    const { availableTags } = this.props;
+    const { metadata, availableTags } = this.props;
 
     return (
-      <Grid stackable container>
+      <Grid stackable container >
         <Grid.Row columns={1}>
           <Grid.Column>
             <Header as="h2" color="blue">פרטי האירוע</Header>
@@ -473,7 +486,7 @@ class EventPartForm extends Component {
           </Grid.Column>
           <Grid.Column width={3} />
           <Grid.Column width={4}>
-            <Grid>
+            <Grid stretched className="bb-less-interesting">
               <Grid.Row>
                 <Grid.Column>
                   <Header as="h5">שפה</Header>
@@ -507,6 +520,16 @@ class EventPartForm extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
+              {
+                metadata.label_id ?
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header as="h5">תאריך</Header>
+                      <CassetteDayPicker onSelect={this.onFilmDateChange} defaultValue={metadata.film_date} />
+                    </Grid.Column>
+                  </Grid.Row> :
+                  null
+              }
             </Grid>
           </Grid.Column>
         </Grid.Row>

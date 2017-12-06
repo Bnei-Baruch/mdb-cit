@@ -16,6 +16,7 @@ import { Metadata, SourcesTree, TagsTree } from '../shared/shapes';
 import SourceSelector from '../components/SourceSelector';
 import TagSelector from '../components/TagSelector';
 import FileNamesWidget from '../components/FileNamesWidget';
+import CassetteDayPicker from '../components/CassetteDayPicker';
 
 class LessonForm extends Component {
 
@@ -46,6 +47,7 @@ class LessonForm extends Component {
       lecturer: LECTURERS[0].value,
       has_translation: true,
       capture_date: today(),
+      film_date: today(),
       require_test: false,
       part: 1,
       artifact_type: ARTIFACT_TYPES[0].value,
@@ -106,6 +108,9 @@ class LessonForm extends Component {
     data.final_name      = data.manual_name || data.auto_name;
     data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
     delete data.error;
+    if (!this.props.metadata.label_id) {
+      delete data.film_date;
+    }
 
     this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
   };
@@ -140,6 +145,10 @@ class LessonForm extends Component {
 
   onArtifactTypeChange = (e, data) => {
     this.setStateAndName({ artifact_type: data.value });
+  };
+
+  onFilmDateChange = (date) => {
+    this.setStateAndName({ film_date: date });
   };
 
   onManualEdit = (e, data) => {
@@ -265,6 +274,7 @@ class LessonForm extends Component {
             sources,
             tags,
             capture_date: captureDate,
+            film_date: filmDate,
             number,
             part,
             artifact_type: artifactType,
@@ -327,7 +337,7 @@ class LessonForm extends Component {
       '_o_' +
       lecturer +
       '_' +
-      captureDate +
+      (this.props.metadata.label_id ? filmDate : captureDate) +
       '_' +
       CONTENT_TYPES_MAPPINGS[artifactType === ARTIFACT_TYPES[0].value ? contentType : artifactType].pattern +
       (pattern ? `_${pattern}` : '') +
@@ -445,7 +455,7 @@ class LessonForm extends Component {
             manual_name: manualName,
             error
           }                                   = this.state;
-    const { availableSources, availableTags } = this.props;
+    const { metadata, availableSources, availableTags } = this.props;
 
     return (
       <Grid stackable container>
@@ -474,7 +484,7 @@ class LessonForm extends Component {
             </Grid>
           </Grid.Column>
           <Grid.Column width={4}>
-            <Grid>
+            <Grid className="bb-less-interesting">
               <Grid.Row>
                 <Grid.Column>
                   <Header as="h5">חלק</Header>
@@ -541,6 +551,16 @@ class LessonForm extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
+              {
+                metadata.label_id ?
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header as="h5">תאריך</Header>
+                      <CassetteDayPicker onSelect={this.onFilmDateChange} defaultValue={metadata.film_date} />
+                    </Grid.Column>
+                  </Grid.Row> :
+                  null
+              }
             </Grid>
           </Grid.Column>
         </Grid.Row>

@@ -6,6 +6,7 @@ import { CONTENT_TYPES_MAPPINGS, CT_FULL_LESSON, EMPTY_OBJECT, LANGUAGES, LECTUR
 import { today } from '../shared/utils';
 import { Metadata } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
+import CassetteDayPicker from '../components/CassetteDayPicker';
 
 class GenericContentForm extends Component {
 
@@ -32,6 +33,7 @@ class GenericContentForm extends Component {
       lecturer: LECTURERS[0].value,
       has_translation: true,
       capture_date: today(),
+      film_date: today(),
       manual_name: null,
     };
     const state        = Object.assign({}, defaultState, props.metadata);
@@ -45,6 +47,9 @@ class GenericContentForm extends Component {
     data.pattern         = data.content_type.toLowerCase();
     data.final_name      = data.manual_name || data.auto_name;
     data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
+    if (!this.props.metadata.label_id) {
+      delete data.film_date;
+    }
 
     this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
   };
@@ -74,6 +79,13 @@ class GenericContentForm extends Component {
     });
   };
 
+  onFilmDateChange = (date) => {
+    this.setState({
+      film_date: date,
+      auto_name: this.suggestName({ film_date: date }),
+    });
+  };
+
   onManualEdit = (e, data) => {
     this.setState({ manual_name: data.value });
   };
@@ -85,7 +97,8 @@ class GenericContentForm extends Component {
             has_translation: hasTranslation,
             capture_date: captureDate,
             content_type: contentType,
-            number
+            number,
+            film_date: filmDate,
           } = Object.assign({}, this.state, diff || {});
 
     // eslint-disable-next-line prefer-template
@@ -93,7 +106,7 @@ class GenericContentForm extends Component {
       '_o_' +
       lecturer +
       '_' +
-      captureDate +
+      (this.props.metadata.label_id ? filmDate : captureDate) +
       '_' +
       CONTENT_TYPES_MAPPINGS[contentType].pattern +
       '_n' +
@@ -104,13 +117,14 @@ class GenericContentForm extends Component {
   }
 
   render() {
+    const { metadata } = this.props;
     const {
             language,
             lecturer,
             has_translation: hasTranslation,
             auto_name: autoName,
-            manual_name: manualName
-          } = this.state;
+            manual_name: manualName,
+          }            = this.state;
 
     return (
       <Grid stackable container>
@@ -147,6 +161,14 @@ class GenericContentForm extends Component {
               onChange={this.onTranslationChange}
             />
           </Grid.Column>
+          {
+            metadata.label_id ?
+              <Grid.Column width={4}>
+                <Header as="h5">תאריך</Header>
+                <CassetteDayPicker onSelect={this.onFilmDateChange} defaultValue={metadata.film_date} />
+              </Grid.Column> :
+              null
+          }
         </Grid.Row>
         <Grid.Row columns={1}>
           <Grid.Column>

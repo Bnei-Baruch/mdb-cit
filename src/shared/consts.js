@@ -182,3 +182,5 @@ export const EVENT_PART_TYPES = [
 export const LESSON_PARTS_OPTIONS = [{ text: 'הכנה', value: 0 }]
   .concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     .map(i => ({ text: `חלק ${i}`, value: i })));
+
+export const DATE_FORMAT = 'YYYY-MM-DD';

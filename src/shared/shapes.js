@@ -38,6 +38,7 @@ export const Metadata = PropTypes.shape({
   manual_name: PropTypes.string,
   final_name: PropTypes.string,
   capture_date: PropTypes.string,
+  film_date: PropTypes.string,
   week_date: PropTypes.string,
   lecturer: PropTypes.string,
   language: PropTypes.string,
@@ -55,4 +56,5 @@ export const Metadata = PropTypes.shape({
     type: PropTypes.oneOf(['source', 'tag']),
     idx: PropTypes.number,
   }),
+  label_id: PropTypes.string,
 });

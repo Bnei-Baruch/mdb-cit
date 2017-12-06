@@ -13,6 +13,7 @@ import {
 import { isActive, today } from '../shared/utils';
 import { Metadata } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
+import CassetteDayPicker from '../components/CassetteDayPicker';
 
 const getTVShows     = collections => collections.get(CT_VIDEO_PROGRAM) || [];
 const getActiveShows = (collections) => {
@@ -55,6 +56,7 @@ class TVShowForm extends Component {
       lecturer: LECTURERS[0].value,
       has_translation: true,
       capture_date: today(),
+      film_date: today(),
       tv_show: 0,
       episode: '1',
       manual_name: null,
@@ -130,6 +132,9 @@ class TVShowForm extends Component {
     data.collection_type = CONTENT_TYPES_MAPPINGS[data.content_type].collection_type;
     delete data.tv_show;
     delete data.active_tvshows;
+    if (!this.props.metadata.label_id) {
+      delete data.film_date;
+    }
 
     this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
   };
@@ -181,6 +186,13 @@ class TVShowForm extends Component {
     });
   };
 
+  onFilmDateChange = (date) => {
+    this.setState({
+      film_date: date,
+      auto_name: this.suggestName({ film_date: date }),
+    });
+  };
+
   onManualEdit = (e, data) => {
     this.setState({ manual_name: data.value });
   };
@@ -195,6 +207,7 @@ class TVShowForm extends Component {
             has_translation: hasTranslation,
             active_tvshows: activeTVShows,
             capture_date: captureDate,
+            film_date: filmDate,
           }    = Object.assign({}, this.state, diff || {});
     const show = activeTVShows[tvShow];
 
@@ -203,7 +216,7 @@ class TVShowForm extends Component {
       '_o_' +
       lecturer +
       '_' +
-      captureDate +
+      (this.props.metadata.label_id ? filmDate : captureDate) +
       '_' +
       CONTENT_TYPES_MAPPINGS[contentType].pattern +
       '_' +
@@ -214,6 +227,7 @@ class TVShowForm extends Component {
   }
 
   render() {
+    const { metadata } = this.props;
     const {
             tv_show: tvShow,
             language,
@@ -259,7 +273,7 @@ class TVShowForm extends Component {
           </Grid.Column>
           <Grid.Column width={2} />
           <Grid.Column width={4}>
-            <Grid>
+            <Grid className="bb-less-interesting">
               <Grid.Row>
                 <Grid.Column>
                   <Header as="h5">שפה</Header>
@@ -293,6 +307,16 @@ class TVShowForm extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
+              {
+                metadata.label_id ?
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header as="h5">תאריך</Header>
+                      <CassetteDayPicker onSelect={this.onFilmDateChange} defaultValue={metadata.film_date} />
+                    </Grid.Column>
+                  </Grid.Row> :
+                  null
+              }
             </Grid>
           </Grid.Column>
         </Grid.Row>

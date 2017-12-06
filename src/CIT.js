@@ -98,6 +98,7 @@ class CIT extends Component {
       'episode',
       'pattern',
       'major',
+      'film_date',
     ].forEach(f => delete metadata[f]);
 
     this.setState({ metadata });

@@ -1,10 +1,12 @@
-export const today = () => {
-  const now   = new Date();
-  const year  = now.getFullYear();
-  const month = `0${now.getMonth() + 1}`.slice(-2);
-  const day   = `0${now.getDate()}`.slice(-2);
+export const formatDate = (d) => {
+  const year  = d.getFullYear();
+  const month = `0${d.getMonth() + 1}`.slice(-2);
+  const day   = `0${d.getDate()}`.slice(-2);
   return `${year}-${month}-${day}`;
 };
+
+export const today = () =>
+  formatDate(new Date());
 
 export const extractI18n = (i18ns, languages, fields) => {
   // Order i18ns by language
@@ -30,7 +32,7 @@ export const extractI18n = (i18ns, languages, fields) => {
 };
 
 export const isActive = collection =>
-!Object.prototype.hasOwnProperty.call(collection.properties, 'active') || collection.properties.active;
+  !Object.prototype.hasOwnProperty.call(collection.properties, 'active') || collection.properties.active;
 
 export const findPath = (forest, uid) => {
   // Put trees in stack

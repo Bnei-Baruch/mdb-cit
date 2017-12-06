@@ -6,6 +6,7 @@ import { CONTENT_TYPES_MAPPINGS, EMPTY_OBJECT, LANGUAGES, LECTURERS, MDB_LANGUAG
 import { isActive, today } from '../shared/utils';
 import { Metadata } from '../shared/shapes';
 import FileNamesWidget from '../components/FileNamesWidget';
+import CassetteDayPicker from '../components/CassetteDayPicker';
 
 const getCollections = (collections, type) =>
   collections.get(CONTENT_TYPES_MAPPINGS[type].collection_type) || [];
@@ -42,6 +43,7 @@ class VirtualLessonForm extends Component {
       lecturer: LECTURERS[0].value,
       has_translation: true,
       capture_date: today(),
+      film_date: today(),
       require_test: false,
       vl: 0,
       topic: '',
@@ -119,6 +121,9 @@ class VirtualLessonForm extends Component {
     delete data.topic;
     delete data.vl;
     delete data.active_vls;
+    if (!this.props.metadata.label_id) {
+      delete data.film_date;
+    }
 
     this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
   };
@@ -167,6 +172,13 @@ class VirtualLessonForm extends Component {
     this.setState({ require_test: data.checked });
   };
 
+  onFilmDateChange = (date) => {
+    this.setState({
+      film_date: date,
+      auto_name: this.suggestName({ film_date: date }),
+    });
+  };
+
   onManualEdit = (e, data) => {
     this.setState({ manual_name: data.value });
   };
@@ -181,6 +193,7 @@ class VirtualLessonForm extends Component {
             has_translation: hasTranslation,
             active_vls: activeVLs,
             capture_date: captureDate,
+            film_date: filmDate,
           } = Object.assign({}, this.state, diff || {});
 
     const collection = activeVLs[vl];
@@ -190,7 +203,7 @@ class VirtualLessonForm extends Component {
       '_o_' +
       lecturer +
       '_' +
-      captureDate +
+      (this.props.metadata.label_id ? filmDate : captureDate) +
       '_' +
       CONTENT_TYPES_MAPPINGS[contentType].pattern +
       (collection && collection.properties.pattern !== null ? `_${collection.properties.pattern}` : '') +
@@ -200,6 +213,7 @@ class VirtualLessonForm extends Component {
   }
 
   render() {
+    const { metadata } = this.props;
     const {
             vl,
             topic,
@@ -210,7 +224,7 @@ class VirtualLessonForm extends Component {
             auto_name: autoName,
             manual_name: manualName,
             active_vls: activeVLs,
-          } = this.state;
+          }            = this.state;
 
     return (
       <Grid stackable container>
@@ -248,7 +262,7 @@ class VirtualLessonForm extends Component {
           </Grid.Column>
           <Grid.Column width={2} />
           <Grid.Column width={4}>
-            <Grid>
+            <Grid className="bb-less-interesting">
               <Grid.Row>
                 <Grid.Column>
                   <Header as="h5">שפה</Header>
@@ -291,6 +305,16 @@ class VirtualLessonForm extends Component {
                   />
                 </Grid.Column>
               </Grid.Row>
+              {
+                metadata.label_id ?
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header as="h5">תאריך</Header>
+                      <CassetteDayPicker onSelect={this.onFilmDateChange} defaultValue={metadata.film_date} />
+                    </Grid.Column>
+                  </Grid.Row> :
+                  null
+              }
             </Grid>
           </Grid.Column>
         </Grid.Row>
