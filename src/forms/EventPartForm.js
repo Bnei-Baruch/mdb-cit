@@ -136,7 +136,6 @@ class EventPartForm extends Component {
     if (EVENT_PART_TYPES[data.part_type].content_type === CT_LESSON_PART) {
       if (data.part === -1) {
         data.content_type = CT_FULL_LESSON;
-        delete data.part;
       }
     } else {
       delete data.part;
