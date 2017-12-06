@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Checkbox, Dropdown, Grid, Header, Icon, Input, Label, List } from 'semantic-ui-react';
 
 import {
+  CT_FULL_LESSON,
   CT_LESSON_PART,
   EMPTY_ARRAY,
   EMPTY_OBJECT,
@@ -131,10 +132,13 @@ class EventPartForm extends Component {
     const data  = { ...this.state };
     const event = data.active_events[data.event];
 
-    if (EVENT_PART_TYPES[data.part_type].pattern === 'lesson') {
-      data.content_type = CT_LESSON_PART;
+    data.content_type = EVENT_PART_TYPES[data.part_type].content_type;
+    if (EVENT_PART_TYPES[data.part_type].content_type === CT_LESSON_PART) {
+      if (data.part === -1) {
+        data.content_type = CT_FULL_LESSON;
+        delete data.part;
+      }
     } else {
-      data.content_type = EVENT_PART_TYPES[data.part_type].content_type;
       delete data.part;
     }
 
@@ -339,6 +343,11 @@ class EventPartForm extends Component {
     }
     // let pattern = active_events.length !== 0 ? active_events[event].properties.pattern : "";
 
+    let p = '';
+    if (EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART) {
+      p = (part === -1) ? '_full' : `_p${part}`;
+    }
+
     // eslint-disable-next-line prefer-template
     const name = (hasTranslation ? 'mlt' : language) +
       '_o_' +
@@ -352,7 +361,7 @@ class EventPartForm extends Component {
       (pattern ? `_${pattern}` : '') +
       '_n' +
       (Number.isNaN(number) ? 1 : number) +
-      (EVENT_PART_TYPES[partType].pattern === 'lesson' ? `_p${part}` : '')
+      p
     ;
 
     return {
@@ -416,7 +425,7 @@ class EventPartForm extends Component {
     const { metadata, availableTags } = this.props;
 
     return (
-      <Grid stackable container >
+      <Grid stackable container>
         <Grid.Row columns={1}>
           <Grid.Column>
             <Header as="h2" color="blue">פרטי האירוע</Header>
@@ -460,14 +469,14 @@ class EventPartForm extends Component {
                 </Grid.Column>
               </Grid.Row>
               {
-                EVENT_PART_TYPES[partType].pattern === 'lesson' ?
+                EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART ?
                   <Grid.Row>
                     <Grid.Column width={6}>
                       <Header as="h5">חלק</Header>
                       <Dropdown
                         selection
                         fluid
-                        options={LESSON_PARTS_OPTIONS}
+                        options={LESSON_PARTS_OPTIONS.concat([{ text: 'גיבוי', value: -1 }])}
                         value={part}
                         onChange={this.onPartChange}
                       />
