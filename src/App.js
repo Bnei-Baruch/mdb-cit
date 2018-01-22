@@ -16,12 +16,13 @@ class App extends Component {
 
   render() {
     const metadata = {
+
       // auto_name: 'mlt_o_rav_2017-09-16_congress_lesson_georgia_n5_p1',
       capture_date: '2017-09-16',
-      label_id: '2839',
+      // label_id: '2839',
       film_date: '2010-09-16',
-      collection_type: 'CONGRESS',
-      collection_uid: 'iycyvtch',
+      // collection_type: 'CONGRESS',
+      // collection_uid: 'iycyvtch',
       content_type: 'LESSON_PART',
       // final_name: 'mlt_o_rav_2017-09-16_congress_lesson_georgia_n5_p1',
       // hag: 'Shabbat',
@@ -37,8 +38,10 @@ class App extends Component {
       // part_type: 0,
       // pattern: 'georgia',
       // require_test: false,
-      // tags: ['jhNPh3eg'],
+      // tags: ['B28Zq6aA'],
       // week_date: '2017-09-15',
+      artifact_type: 'LELO_MIKUD',
+      // artifact_type: 'KITEI_MAKOR',
     };
     // const metadata = {
     //   // collection_type: "CONGRESS",

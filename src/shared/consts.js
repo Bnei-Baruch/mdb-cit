@@ -111,6 +111,7 @@ export const CT_CLIP                  = 'CLIP';
 export const CT_TRAINING              = 'TRAINING';
 export const CT_KITEI_MAKOR           = 'KITEI_MAKOR';
 export const CT_PUBLICATION           = 'PUBLICATION';
+export const CT_LELO_MIKUD            = 'LELO_MIKUD';
 
 export const EVENT_CONTENT_TYPES   = [CT_CONGRESS, CT_HOLIDAY, CT_PICNIC, CT_UNITY_DAY];
 export const LECTURE_CONTENT_TYPES = [CT_LECTURE_SERIES, CT_CHILDREN_LESSONS, CT_WOMEN_LESSONS, CT_VIRTUAL_LESSONS];
@@ -118,6 +119,7 @@ export const LECTURE_CONTENT_TYPES = [CT_LECTURE_SERIES, CT_CHILDREN_LESSONS, CT
 export const ARTIFACT_TYPES = [
   { text: 'תוכן מרכזי', value: 'main' },
   { text: 'קטעי מקור', value: CT_KITEI_MAKOR },
+  { text: 'ללא קבוצת מיקוד', value: CT_LELO_MIKUD, disabled: true },
 ];
 
 export const CONTENT_TYPE_BY_ID = {
@@ -152,12 +154,14 @@ export const CONTENT_TYPE_BY_ID = {
   35: CT_CLIPS,
   36: CT_PUBLICATION,
   37: CT_ARTICLES,
+  38: CT_LELO_MIKUD,
 };
 
 export const CONTENT_TYPES_MAPPINGS = {
   [CT_LESSON_PART]: { collection_type: CT_DAILY_LESSON, pattern: 'lesson' },
   [CT_FULL_LESSON]: { collection_type: CT_DAILY_LESSON, pattern: 'lesson' },
   [CT_KITEI_MAKOR]: { collection_type: null, pattern: 'kitei-makor' },
+  [CT_LELO_MIKUD]: { collection_type: null, pattern: 'lelo-mikud' },
   [CT_VIDEO_PROGRAM_CHAPTER]: { collection_type: CT_VIDEO_PROGRAM, pattern: 'program' },
   [CT_FRIENDS_GATHERING]: { collection_type: CT_FRIENDS_GATHERINGS, pattern: 'yeshivat-haverim' },
   [CT_MEAL]: { collection_type: CT_MEALS, pattern: 'seuda' },

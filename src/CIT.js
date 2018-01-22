@@ -6,6 +6,7 @@ import {
   CT_CHILDREN_LESSON,
   CT_EVENT_PART,
   CT_LECTURE,
+  CT_LELO_MIKUD,
   CT_LESSON_PART,
   CT_UNKNOWN,
   CT_VIDEO_PROGRAM_CHAPTER,
@@ -91,7 +92,7 @@ class CIT extends Component {
       'collection_type',
       'sources',
       'tags',
-      'artifact_type',
+      // 'artifact_type',
       'number',
       'part',
       'part_type',
@@ -100,6 +101,11 @@ class CIT extends Component {
       'major',
       'film_date',
     ].forEach(f => delete metadata[f]);
+
+    // artifact_type may not come from us but from embedder
+    if (metadata.artifact_type !== CT_LELO_MIKUD) {
+      delete metadata.artifact_type;
+    }
 
     this.setState({ metadata });
   };

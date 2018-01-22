@@ -5,6 +5,7 @@ import { Button, Checkbox, Dropdown, Grid, Header, Icon, Label, List } from 'sem
 import {
   ARTIFACT_TYPES,
   CONTENT_TYPES_MAPPINGS,
+  CT_LELO_MIKUD,
   EMPTY_ARRAY,
   EMPTY_OBJECT,
   LANGUAGES,
@@ -454,7 +455,7 @@ class LessonForm extends Component {
             auto_name: autoName,
             manual_name: manualName,
             error
-          }                                   = this.state;
+          }                                             = this.state;
     const { metadata, availableSources, availableTags } = this.props;
 
     return (
@@ -504,6 +505,7 @@ class LessonForm extends Component {
                     selection
                     fluid
                     options={ARTIFACT_TYPES}
+                    disabled={artifactType === CT_LELO_MIKUD}
                     value={artifactType}
                     onChange={this.onArtifactTypeChange}
                   />
