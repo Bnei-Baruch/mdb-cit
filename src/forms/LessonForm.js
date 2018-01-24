@@ -90,6 +90,15 @@ class LessonForm extends BaseForm {
                 {this.renderSources()}
               </Grid.Column>
             </Grid.Row>
+            {
+              this.props.afterClear ?
+                <Grid.Row>
+                  <Grid.Column width={6}>
+                    {this.renderNumber()}
+                  </Grid.Column>
+                </Grid.Row>
+                : null
+            }
           </Grid>
         </Grid.Column>
         <Grid.Column width={4}>

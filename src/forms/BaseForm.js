@@ -35,6 +35,7 @@ class BaseForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
+    afterClear: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -42,6 +43,7 @@ class BaseForm extends Component {
     availableSources: EMPTY_ARRAY,
     availableTags: EMPTY_ARRAY,
     collections: new Map(),
+    afterClear: false,
   };
 
   constructor(props) {
@@ -67,7 +69,7 @@ class BaseForm extends Component {
       // content_type specific
       part: 1,
       part_type: 0,
-      number: 1,  // make common and allow edit after "clear" button
+      number: 1,
       artifact_type: ARTIFACT_TYPES[0].value,
       episode: '1',
 
@@ -177,19 +179,6 @@ class BaseForm extends Component {
 
     this.setStateAndName(diff);
   }
-
-  onSubmit = (e) => {
-    if (!this.validate()) {
-      return;
-    }
-
-    const data = this.prepareData();
-    this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
-  };
-
-  onCancel = (e) => {
-    this.setState(this.getInitialState(this.props), () => this.props.onCancel(e));
-  };
 
   onLanguageChange = (e, data) => {
     this.setStateAndName({ language: data.value });
@@ -302,7 +291,8 @@ class BaseForm extends Component {
     }
 
     // content_type specific
-    const ctSpecificToClean = new Set(['part', 'part_type', 'number', 'artifact_type', 'episode']);
+    // number is not considered for removal since it mostly arrives from workflow
+    const ctSpecificToClean = new Set(['part', 'part_type', 'artifact_type', 'episode']);
 
     switch (data.content_type) {
     case CT_LESSON_PART:
@@ -321,7 +311,6 @@ class BaseForm extends Component {
 
     if (EVENT_CONTENT_TYPES.includes(data.collection_type)) {
       ctSpecificToClean.delete('part_type');
-      ctSpecificToClean.delete('number');
     }
 
     ctSpecificToClean.forEach(x => delete data[x]);
@@ -343,6 +332,23 @@ class BaseForm extends Component {
 
     return this.cleanData(data);
   }
+
+  handleSubmit = (e) => {
+    if (!this.validate()) {
+      return;
+    }
+
+    const data = this.prepareData();
+    this.setState(this.getInitialState(this.props), () => this.props.onSubmit(e, data));
+  };
+
+  handleCancel = (e) => {
+    this.setState(this.getInitialState(this.props), () => this.props.onCancel(e));
+  };
+
+  handleClear = (e) => {
+    this.props.onClear(e);
+  };
 
   addSource = (selection) => {
     const sources = this.state.sources;
@@ -749,10 +755,10 @@ class BaseForm extends Component {
   }
 
   renderForm() {
-    const { metadata } = this.props;
+    const { metadata, afterClear } = this.props;
 
     return (
-      <Grid.Row columns={3} className="bb-interesting">
+      <Grid.Row className="bb-interesting">
         <Grid.Column width={4}>
           {this.renderLanguage()}
         </Grid.Column>
@@ -762,6 +768,13 @@ class BaseForm extends Component {
         <Grid.Column width={4}>
           {this.renderHasTranslation()}
         </Grid.Column>
+        {
+          afterClear ?
+            <Grid.Column width={4}>
+              {this.renderNumber()}
+            </Grid.Column> :
+            null
+        }
         {
           metadata.label_id ?
             <Grid.Column width={4}>
@@ -800,11 +813,11 @@ class BaseForm extends Component {
               color="orange"
               icon="trash outline"
               floated="left"
-              onClick={this.props.onClear}
+              onClick={this.handleClear}
             />
             {error ? <Label basic color="red" size="large">{error}</Label> : null}
-            <Button onClick={this.onCancel}>בטל</Button>
-            <Button primary onClick={this.onSubmit}>שמור</Button>
+            <Button onClick={this.handleCancel}>בטל</Button>
+            <Button primary onClick={this.handleSubmit}>שמור</Button>
           </Grid.Column>
         </Grid.Row>
       </Grid>

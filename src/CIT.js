@@ -50,6 +50,7 @@ class CIT extends Component {
         tags: [],
         collections: new Map(),
       },
+      afterClear: false,
     };
   }
 
@@ -108,14 +109,15 @@ class CIT extends Component {
       delete metadata.artifact_type;
     }
 
-    this.setState({ metadata });
+    this.setState({ metadata, afterClear: true });
   };
 
   render() {
-    const { store, metadata } = this.state;
+    const { store, metadata, afterClear } = this.state;
 
     const formProps = {
       metadata,
+      afterClear,
       onSubmit: this.onFormSubmit,
       onCancel: this.onFormCancel,
       onClear: this.onClear,
