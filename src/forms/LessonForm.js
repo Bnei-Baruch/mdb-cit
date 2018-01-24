@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
 
 import { ARTIFACT_TYPES, CONTENT_TYPES_MAPPINGS } from '../shared/consts';
+import { sourcesTagsPattern } from '../shared/utils';
 import BaseForm from './BaseForm';
 
 class LessonForm extends BaseForm {
@@ -22,50 +23,7 @@ class LessonForm extends BaseForm {
             major
           } = Object.assign({}, this.state, diff || {});
 
-    let pattern = '';
-
-    if (major.type) {
-      const selection = major.type === 'source' ? sources : tags;
-      const item      = selection[major.idx];
-      if (Array.isArray(item)) {
-        // pattern is the deepest node in the chain with a pattern
-        for (let j = item.length - 1; j >= 0; j--) {
-          const x = item[j];
-          if (x.pattern) {
-            pattern = x.pattern;
-            break;
-          }
-        }
-      }
-    }
-
-    // Note: We keep the 2 following paragraphs for cases where
-    // major has no pattern in it's chain.
-    // In such cases we take what we have if possible.
-
-    // pattern is the deepest node in the chain with a pattern
-    for (let i = 0; pattern === '' && i < tags.length; i++) {
-      const tag = tags[i];
-      for (let j = tag.length - 1; j >= 0; j--) {
-        const t = tag[j];
-        if (t.pattern) {
-          pattern = t.pattern;
-          break;
-        }
-      }
-    }
-
-    // if no tag was selected take pattern from sources, same logic as above
-    for (let i = 0; pattern === '' && i < sources.length; i++) {
-      const source = sources[i];
-      for (let j = source.length - 1; j >= 0; j--) {
-        const s = source[j];
-        if (s.pattern) {
-          pattern = s.pattern;
-          break;
-        }
-      }
-    }
+    let pattern = sourcesTagsPattern(sources, tags, major);
 
     // override lesson preparation value
     if (pattern === '' && part === 0) {

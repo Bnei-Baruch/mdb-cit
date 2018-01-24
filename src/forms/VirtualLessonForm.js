@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
 
 import { CONTENT_TYPES_MAPPINGS } from '../shared/consts';
-import { isActive } from '../shared/utils';
+import { isActive, sourcesTagsPattern } from '../shared/utils';
 import BaseForm from './BaseForm';
 
 class VirtualLessonForm extends BaseForm {
@@ -26,10 +26,18 @@ class VirtualLessonForm extends BaseForm {
             active_collections: activeCollections,
             capture_date: captureDate,
             film_date: filmDate,
+            sources,
+            tags,
+            major
           } = Object.assign({}, this.state, diff || {});
 
     const collection = activeCollections[sIdx];
     const pattern    = collection ? collection.properties.pattern : '';
+
+    let suffix = topic;
+    if (!suffix) {
+      suffix = sourcesTagsPattern(sources, tags, major);
+    }
 
     // eslint-disable-next-line prefer-template
     const name = (hasTranslation ? 'mlt' : language) +
@@ -40,7 +48,7 @@ class VirtualLessonForm extends BaseForm {
       '_' +
       CONTENT_TYPES_MAPPINGS[contentType].pattern +
       (pattern ? `_${pattern}` : '') +
-      (topic ? `_${topic}` : '');
+      (suffix ? `_${suffix}` : '');
 
     return {
       pattern,
@@ -68,6 +76,16 @@ class VirtualLessonForm extends BaseForm {
             <Grid.Row>
               <Grid.Column>
                 {this.renderTopic()}
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                {this.renderTags()}
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                {this.renderSources()}
               </Grid.Column>
             </Grid.Row>
           </Grid>
