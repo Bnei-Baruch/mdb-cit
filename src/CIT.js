@@ -17,15 +17,16 @@ import {
 import { Metadata } from './shared/shapes';
 import { fetchCollections, fetchSources, fetchTags } from './shared/store';
 import ContentTypeForm from './forms/ContentTypeForm';
+import BaseForm from './forms/BaseForm';
 import LessonForm from './forms/LessonForm';
 import TVShowForm from './forms/TVShowForm';
 import VirtualLessonForm from './forms/VirtualLessonForm';
 import EventPartForm from './forms/EventPartForm';
-import GenericContentForm from './forms/GenericContentForm';
 
 import './forms/forms.css';
 
 class CIT extends Component {
+
   static propTypes = {
     metadata: Metadata,
     onComplete: PropTypes.func,
@@ -113,87 +114,46 @@ class CIT extends Component {
   render() {
     const { store, metadata } = this.state;
 
+    const formProps = {
+      metadata,
+      onSubmit: this.onFormSubmit,
+      onCancel: this.onFormCancel,
+      onClear: this.onClear,
+      collections: store.collections,
+      availableSources: store.sources,
+      availableTags: store.tags,
+    };
+
     let el;
     if (metadata.content_type && metadata.content_type !== CT_UNKNOWN) {
+      let FormComponent;
+
       // This is here to allow reloading compatibility with given metadata saved from EventForm
       if (EVENT_CONTENT_TYPES.includes(metadata.collection_type)) {
-        el = (
-          <EventPartForm
-            metadata={metadata}
-            onSubmit={this.onFormSubmit}
-            onCancel={this.onFormCancel}
-            onClear={this.onClear}
-            collections={store.collections}
-            availableTags={store.tags}
-          />
-        );
+        FormComponent = EventPartForm;
       } else {
         switch (metadata.content_type) {
         case CT_LESSON_PART:
-          el = (
-            <LessonForm
-              metadata={metadata}
-              onSubmit={this.onFormSubmit}
-              onCancel={this.onFormCancel}
-              onClear={this.onClear}
-              availableSources={store.sources}
-              availableTags={store.tags}
-            />
-          );
+          FormComponent = LessonForm;
           break;
-
         case CT_VIDEO_PROGRAM_CHAPTER:
-          el = (
-            <TVShowForm
-              metadata={metadata}
-              onSubmit={this.onFormSubmit}
-              onCancel={this.onFormCancel}
-              onClear={this.onClear}
-              collections={store.collections}
-            />
-          );
+          FormComponent = TVShowForm;
           break;
-
         case CT_EVENT_PART:
-          el = (
-            <EventPartForm
-              metadata={metadata}
-              onSubmit={this.onFormSubmit}
-              onCancel={this.onFormCancel}
-              onClear={this.onClear}
-              collections={store.collections}
-              availableTags={store.tags}
-            />
-          );
+          FormComponent = EventPartForm;
           break;
-
         case CT_LECTURE:
         case CT_CHILDREN_LESSON:
         case CT_WOMEN_LESSON:
         case CT_VIRTUAL_LESSON:
-          el = (
-            <VirtualLessonForm
-              metadata={metadata}
-              onSubmit={this.onFormSubmit}
-              onCancel={this.onFormCancel}
-              onClear={this.onClear}
-              collections={store.collections}
-            />
-          );
+          FormComponent = VirtualLessonForm;
           break;
-
         default:
-          el = (
-            <GenericContentForm
-              metadata={metadata}
-              onSubmit={this.onFormSubmit}
-              onCancel={this.onFormCancel}
-              onClear={this.onClear}
-            />
-          );
+          FormComponent = BaseForm;
           break;
         }
       }
+      el = <FormComponent {...formProps} />;
     } else {
       el = <ContentTypeForm onSelect={this.onCTSelected} />;
     }

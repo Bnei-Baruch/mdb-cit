@@ -31,7 +31,7 @@ const FileNamesWidget = (props) => {
               placeholder="שנה שם אוטומטי"
               className="bb-manual-name-input"
               value={manualName || ''}
-              focus={manualName && manualName !== autoName}
+              focus={!!manualName && manualName !== autoName}
               onChange={onChange}
             />
           </Table.Cell>
