@@ -171,6 +171,7 @@ export const CONTENT_TYPES_MAPPINGS = {
   [CT_CHILDREN_LESSON]: { collection_type: CT_CHILDREN_LESSONS, pattern: 'children-lesson' },
   [CT_WOMEN_LESSON]: { collection_type: CT_WOMEN_LESSONS, pattern: 'women-lesson' },
   [CT_VIRTUAL_LESSON]: { collection_type: CT_VIRTUAL_LESSONS, pattern: 'vl' },
+  [CT_EVENT_PART]: { collection_type: null, pattern: 'event-part' },
 };
 
 export const EVENT_PART_TYPES = [
