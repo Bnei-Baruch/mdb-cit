@@ -2,6 +2,8 @@ import React from 'react';
 import { Dropdown, Grid, Header } from 'semantic-ui-react';
 
 import {
+  ARTIFACT_TYPES,
+  CONTENT_TYPES_MAPPINGS,
   CT_FULL_LESSON,
   CT_LESSON_PART,
   EVENT_CONTENT_TYPES,
@@ -38,31 +40,6 @@ class EventPartForm extends BaseForm {
     return super.cleanData(data);
   }
 
-  // prepareData() {
-  //   const {
-  //           active_collections: activeCollections,
-  //           selected_collection: sIdx,
-  //           part_type: partType,
-  //           part,
-  //         } = this.state;
-  //
-  //   const event = activeCollections[sIdx];
-  //
-  //   const data           = super.prepareData();
-  //   data.collection_type = event.type;
-  //   data.content_type    = EVENT_PART_TYPES[partType].content_type;
-  //
-  //   if (EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART) {
-  //     if (part === -1) {
-  //       data.content_type = CT_FULL_LESSON;
-  //     }
-  //   } else {
-  //     delete data.part;
-  //   }
-  //
-  //   return data;
-  // }
-
   suggestName(diff) {
     const {
             selected_collection: sIdx,
@@ -75,6 +52,7 @@ class EventPartForm extends BaseForm {
             number,
             part,
             active_collections: activeCollections,
+            artifact_type: artifactType,
           } = Object.assign({}, this.state, diff || {});
 
     let pattern   = '';
@@ -85,9 +63,11 @@ class EventPartForm extends BaseForm {
       eventType = e.type.replace(/_/g, '-');
     }
 
-    let p = '';
+    let p  = '';
+    let at = '';
     if (EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART) {
-      p = (part === -1) ? '_full' : `_p${part}`;
+      p  = (part === -1) ? '_full' : `_p${part}`;
+      at = artifactType === ARTIFACT_TYPES[0].value ? '' : `_${CONTENT_TYPES_MAPPINGS[artifactType].pattern}`;
     }
 
     // eslint-disable-next-line prefer-template
@@ -100,6 +80,7 @@ class EventPartForm extends BaseForm {
       eventType +
       '_' +
       EVENT_PART_TYPES[partType].pattern +
+      at +
       (pattern ? `_${pattern}` : '') +
       '_n' +
       (Number.isNaN(number) ? 1 : number) +
@@ -164,6 +145,15 @@ class EventPartForm extends BaseForm {
         <Grid.Column width={3} />
         <Grid.Column width={4}>
           <Grid stretched className="bb-less-interesting">
+            {
+              EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART ?
+                <Grid.Row>
+                  <Grid.Column>
+                    {this.renderArtifactType()}
+                  </Grid.Column>
+                </Grid.Row> :
+                null
+            }
             <Grid.Row>
               <Grid.Column>
                 {this.renderLanguage()}
