@@ -65,9 +65,13 @@ class EventPartForm extends BaseForm {
 
     let p  = '';
     let at = '';
+    let pt = EVENT_PART_TYPES[partType].pattern;
     if (EVENT_PART_TYPES[partType].content_type === CT_LESSON_PART) {
-      p  = (part === -1) ? '_full' : `_p${part}`;
-      at = artifactType === ARTIFACT_TYPES[0].value ? '' : `_${CONTENT_TYPES_MAPPINGS[artifactType].pattern}`;
+      p = (part === -1) ? '_full' : `_p${part}`;
+      if (artifactType !== ARTIFACT_TYPES[0].value) {
+        pt = '';
+        at = CONTENT_TYPES_MAPPINGS[artifactType].pattern;
+      }
     }
 
     // eslint-disable-next-line prefer-template
@@ -79,7 +83,7 @@ class EventPartForm extends BaseForm {
       '_' +
       eventType +
       '_' +
-      EVENT_PART_TYPES[partType].pattern +
+      pt +
       at +
       (pattern ? `_${pattern}` : '') +
       '_n' +
